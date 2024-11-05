@@ -67,7 +67,7 @@ public class AppController { // Создаем класс с модификат�
     public String viewHomePage(Model model, @Param("keyword") String keyword) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        // Проверка на наличие роли ADMIN у пользователя
+        // Проверка на наличие роли ADMIN у пользовател
         if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
             List<Good> listGoods = service.listAll(keyword);
             model.addAttribute("listGoods", listGoods);
