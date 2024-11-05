@@ -64,21 +64,38 @@ public class AppController { // Создаем класс с модификат�
     // внедрение зависимостей (dependency injection)
     //запросы, начинающиеся с /
     @RequestMapping("/index")
-    public String viewHomePage(Model model, @Param("keyword") String keyword) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        // Проверка на наличие роли ADMIN у пользовател
-        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-            List<Good> listGoods = service.listAll(keyword);
-            model.addAttribute("listGoods", listGoods);
-            model.addAttribute("keyword", keyword);
-            return "index"; // Возвращаем шаблон index для администратора
-        } else {
-            return "index_user"; // Возвращаем шаблон index_user для обычного пользователя
-        }
+    public String viewAdminHomePage(Model model, @Param("keyword") String keyword) {
+        List<Good> listGoods = service.listAll(keyword);
+        model.addAttribute("listGoods", listGoods);
+        model.addAttribute("keyword", keyword);
+        return "index"; // Возвращаем шаблон index для администратора
     }
 
+    // Обработчик для страницы index_user
+    @RequestMapping("/index_user")
+    public String viewUserHomePage(Model model, @Param("keyword") String keyword) {
+        List<Good> listGoods = service.listAll(keyword);
+        model.addAttribute("listGoods", listGoods);
+        model.addAttribute("keyword", keyword);
+        return "index_user"; // Возвращаем шаблон index_user для обычного пользователя
+    }
 
+    @RequestMapping("/") // слеш => Наша главная страница
+    //1. Вызывается метод service.listAll(keyword), который, вероятно, возвращает список книг, соответствующих заданному
+    // поисковому запросу.
+    //2. Полученный список добавляется в модель под именем listGoods.
+//3. Значение keyword также добавляется в модель.
+//4. Возвращается имя представления index, которое будет отображаться в ответ на запрос.
+    public String viewHomePage(Model model, @Param("keyword") String keyword) {
+//Реализация поиска на главной странице по критериям
+        List<Good> listGoods = service.listAll(keyword); // Наш список книг. Элементы в список передаются из класса GoodService
+        model.addAttribute("listGoods", listGoods); // Создаем модель и добавляем в нее атрибут. На главной странице будет
+        // выводиться список книг
+        model.addAttribute("keyword", keyword); // Создаем модель и добавляем в нее атрибут. На главной странице будет выводиться
+        // поиск книг
+        //index.html-туда будут возвращаться данные
+        return "index"; // Выводится все то, что отображено в шаблоне index.html, модели будут туда также добавляться
+    }
 
     //контроллер по добавлению книги
     @RequestMapping("/new")
