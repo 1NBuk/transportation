@@ -1,10 +1,574 @@
+<!--
+DOCTYPE Объявляет тип документа и предоставляет основную информацию для браузера — его язык и версия.
+body содержимое, не относящееся к метаданным документа
+html Сообщает браузеру, что это HTML-документ
+meta Используется для хранения дополнительной информации о странице
+title Заголовок HTML-документа, отображаемый в верхней части строки заголовка браузера
+link Определяет отношения между документом и внешним ресурсом
+head Элемент-контейнер для метаданных HTML-документа, таких как <title>, <meta>, <script>, <link>, <style>
+div Элемент-контейнер для разделов HTML-документа. Используется для группировки блочных элементов с целью форматирования стилями.
+blockquote Выделяет текст как цитату.Текст, помещенный внутри этого тега, визуально отделяется от основного контента
+h Создают заголовки шести уровней для связанных с ними разделов
+form Форма для сбора и отправки на сервер информации от пользователей
+input Создает многофункциональные поля формы, в которые пользователь может вводить данные.
+table Элемент для создания таблицы
+td данные в ячейках
+tr Создает строку таблицы
+th Создает заголовок ячейки таблицы
+a Создаёт гипертекстовые ссылки
+href задает URl-адрес веб-страницы
+p Параграфы в тексте
+thead создает группу заголовков для строк таблицы с целью задания единого оформления
+script Используется для определения сценария на стороне клиента (обычно JavaScript)
+colspan задает количество ячеек, объединенных по горизонтали, а rowspan — по вертикали
+-->
+
+<!-- на эту страничку будут возвращаться все данные -->
 <!DOCTYPE html>
-<html lang="en">
+<!-- будем работать по шаблону thymeleaf -->
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Система работы с перевозками грузов</title>
+    <!-- Это ссылка на файл стилей (CSS) для библиотеки Bootstrap, который загружается через сеть CDN
+    (Content Delivery Network). Эта библиотека предоставляет готовые стили для создания адаптивных веб-страниц.-->
+    <!--
+    rel="stylesheet"
+    Атрибут указывает, что данная ссылка является подключением CSS-файла.
+    integrity="sha384-..."
+    Атрибут указывает хеш-сумму, которая используется для проверки целостности загружаемого файла. Это помогает убедиться, что файл не был изменен или поврежден.
+    crossorigin="anonymous"
+    Атрибут указывает на то, что файл загружается с другого домена (в данном случае с CDN), и браузер не будет отправлять куки или другие данные с запросом, сохраняя анонимность.
+    -->
+    <!-- Подключение Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <!-- Подключение Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Добавляем CSS-стили для уменьшения гистограммы -->
+    <!--
+    padding-left: 0; — убирает внутренние отступы слева.
+    padding-right: 0; — убирает внутренние отступы справа.
+    margin-left: auto; — автоматически задает внешние отступы слева, что центрирует элемент по горизонтали.
+    margin-right: auto; — автоматически задает внешние отступы справа (также помогает центрировать элемент).
+    display: block; — устанавливает элемент как блочный, что позволяет ему занимать всю ширину доступного пространства и воспринимать свойства ширины и высоты.
+    width: 500px; — задает фиксированную ширину элемента в 500 пикселей.
+    height: 500px; — задает фиксированную высоту элемента в 500 пикселей.
+    -->
+    <style>
+        #issueChart {
+            padding-left: 0;
+            padding-right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+            width: 500px;
+            height: 500px;
+        }
+    </style>
 </head>
 <body>
-$END$
+<!-- overflow фон подстраевается под ширину браузера;100vhvh-растягиваем картинку -->
+<!-- Фоновое изображение и контейнер -->
+<div class="bg-image"
+     style=" background-image: linear-gradient(rgba(0, 0, 0, 0.527),rgba(0, 0, 0, 0.5)) , url('https://cargomaster.info/wp-content/uploads/2023/04/perevozki-kontejnerami.jpg'); height: 100vh; overflow: auto; background-size: cover">
+    <!-- blockquote класс bootstrap; текст по центру -->
+    <!-- Заголовок страницы -->
+    <blockquote class="blockquote text-center text-white"><h1>Перевозки грузов</h1></blockquote>
+    <!-- класс колонки, внутри которой будем работать, чтобы сделать форму поиска по центру-->
+
+    <!-- Форма поиска -->
+    <div class="row">
+        <div class="col-md-8 offset-md-4">
+            <h4 class="text-white">Поиск груза по любому критерию:</h4>
+            <!--Это HTML-форма с использованием шаблонизатора Thymeleaf (атрибут th:).
+            Атрибут th:action указывает на действие формы, которое будет выполняться при отправке.
+            Здесь это корневая страница (/).-->
+            <form th:action="@{/}">
+                <!-- keyword из джавы будем передавать в html и будем его называть keyword-->
+                <!--
+                Это текстовое поле для ввода данных. Атрибуты:
+                name — имя параметра, передаваемого при отправке формы.
+                id — уникальный идентификатор для этого поля.
+                size="70" — указывает на ширину поля ввода.
+                th:value="${keyword}" — Thymeleaf-синтаксис для динамического заполнения значением переменной keyword.
+                required — обязательное для заполнения поле.
+                -->
+                <input type="text" name="keyword" id="keyword" size="70" th:value="${keyword}" required/>
+                <!-- делаем кнопки-->
+                <!--
+                btn — базовый стиль кнопки.
+                btn-success — зеленая кнопка (Bootstrap класс для успешного действия).
+                btn-sm — уменьшенный размер кнопки.
+                -->
+                <input type="submit" class="btn btn-success btn-sm" value="Поиск"/>
+                <input type="button" class="btn btn-warning btn-sm" value="Очистить" id="btnClear"
+                       onclick="clearSearch()"/>
+            </form>
+
+        </div>
+    </div>
+    <!--
+    table — базовый стиль таблицы.
+    table-striped — чередование цвета строк.
+    table-hover — выделение строки при наведении курсора.
+    -->
+    <!-- Добавляем фильтр по дате выдачи -->
+    <div class="row mt-4">
+        <div class="col-md-6 offset-md-4">
+            <!-- Заголовок для блока фильтрации по дате -->
+            <h4 class="text-white">Фильтр по дате поставки груза:</h4>
+
+            <!-- Форма для фильтрации грузов по дате, идентификатор можно использовать для обращения к форме -->
+            <form id="dateFilterForm">
+                <!-- Блок для группировки элементов ввода внутри формы -->
+                <div class="input-group">
+
+                    <!-- Поле для выбора начальной даты фильтрации -->
+                    <input type="date" id="startDate" class="form-control" placeholder="Начальная дата">
+
+                    <!-- Текстовое обозначение промежутка между датами -->
+                    <span class="input-group-text">до</span>
+
+                    <!-- Поле для выбора конечной даты фильтрации -->
+                    <input type="date" id="endDate" class="form-control" placeholder="Конечная дата">
+
+                    <!-- Кнопка для применения фильтра, при клике вызывается JavaScript-функция filterGoodsByDate -->
+                    <button type="button" class="btn btn-primary" onclick="filterGoodsByDate()">Применить</button>
+
+                </div> <!-- Закрываем блок input-group -->
+            </form> <!-- Закрываем форму -->
+        </div> <!-- Закрываем колонку -->
+    </div> <!-- Закрываем строку -->
+
+    <!--Количество по дате -->
+    <div class="row mt-4 text-white"><!--mt-4 добавляет отступ сверху-->
+        <div class="col-md-6 offset-md-4"> <!--будет занимать 6 колонок сетки на экранах средней ширины и больше,
+        с отступом в 4 колонки слева, выравнивая содержимое по центру-->
+            <h4 class="text-white">Показать количество отправки грузов за выбранную дату:</h4>
+            <!-- Размещение в одной строке -->
+            <div class="input-group"> <!--чтобы располагались на одной строке-->
+                <!-- Поле для выбора даты -->
+                <input type="date" id="selectedDate" class="form-control"><!--form-control добавляет стандартное оформление-->
+                <!-- Кнопка для показа количества сдач -->
+                <button class="btn btn-primary" onclick="displayIssueCount()">Показать</button>
+                <!--делает её кнопкой Bootstrap с синим цветом-->
+            </div>
+            <!-- Блок для отображения результата -->
+            <p id="issueCountResult" class="mt-2"></p><!--У этого абзаца есть класс mt-2, добавляющий отступ сверху-->
+        </div>
+    </div>
+
+    <!-- Таблица с грузами; table-hover-подсветка -->
+    <table id="goodsTable" class="table table-striped table-hover text-white">
+        <thead>
+        <tr>
+            <!-- scope="col"
+            данная ячейка (обычно th) отвечает за заголовок колонки в таблице. -->
+            <th scope="col">ID груза</th>
+            <th scope="col">Название груза</th>
+            <th scope="col">Содержимое груза</th>
+            <th scope="col">Город отправки</th>
+            <th scope="col">Дата отправки</th>
+            <th scope="col">Город прибытия</th>
+            <th scope="col">Дата прибытия</th>
+        </tr>
+        </thead>
+        <!-- тело таблицы -->
+        <tbody>
+        <!-- student - сущность: эту сущность указывали в других классах в java-->
+        <tr th:each="good: ${listGoods}">
+            <!-- row - чтобы id выделялся жирным цветом -->
+            <!-- через эту сущность будем обращаться ко всем элементам listStudents; если данных нет, то будет выводиться id студента отстутствует-->
+            <th scope="row" class="text-white" th:text="${good.id}">ID груза отсутствует</th>
+            <th scope="row" class="text-white" th:text="${good.good_name}">Название груза отсутствует</th>
+            <th scope="row" class="text-white" th:text="${good.content}">Содержимое груза отсутствует</th>
+            <th scope="row" class="text-white" th:text="${good.departure_city}">Город отправки отсутствует</th>
+            <th scope="row" class="text-white" th:text="${good.departure_date}">Дата отправки отсутствует</th>
+            <th scope="row" class="text-white" th:text="${good.arrival_city}">Город прибытия отсутствует</th>
+            <th scope="row" class="text-white" th:text="${good.arrival_date}">Дата прибытия отсутствует</th>
+            <!-- добавляем кнопки -->
+            <!-- ссылка на редактирование в AppController -->
+            <!--
+            th:href — указывает путь Thymeleaf для перехода на страницу редактирования груза
+            (путь формируется с использованием ID груза ${good.id}).
+            Кнопка с классом btn btn-info — синяя кнопка Bootstrap.
+            -->
+        </tr>
+
+        </tbody>
+    </table>
+
+    <!-- с помощью javascript считаем кол-во студентов-->
+    <!-- Счётчик количества грузов -->
+    <p class="text-white">
+        <script type="text/javascript">
+            function getRowsColumn() {
+                <!-- id таблицы, который мы сами прописали сверху; как будет определяться тело таблицы; считаем кол-во tr-->
+                //Находит таблицу с идентификатором 1.
+                //Получает tbody этой таблицы.
+                //Подсчитывает количество строк (tr) в теле таблицы.
+                // Находит таблицу с идентификатором 'goodsTable'
+                let table = document.getElementById('goodsTable');
+                let tBody = table.querySelector('tbody');
+                const count = tBody.querySelectorAll('tr').length;
+                document.write('Количество грузов в таблице: ' + count)
+            }
+
+            getRowsColumn()
+        </script>
+    <p id="averageGoodsResult" class="text-white">
+        <script>
+            // Функция для получения всех дат отправки грузов
+            function getDepartureDates() {
+                const table = document.getElementById('goodsTable');
+                const tBody = table.querySelector('tbody');
+                const rows = tBody.querySelectorAll('tr');
+                const departureDates = [];
+
+                rows.forEach(row => {
+                    // Предполагаем, что дата отправки находится в 5-м столбце (индекс 4)
+                    const cells = row.querySelectorAll('td, th');
+                    const departureDateCell = cells[4]; // Столбец даты отправки
+                    const departureDate = departureDateCell.textContent.trim();
+                    if (departureDate) { // Проверка на пустую дату
+                        departureDates.push(departureDate);
+                    }
+                });
+
+                return departureDates;
+            }
+
+            // Подсчёт количества отправок по каждой дате
+            function countGoodsByDate(departureDates) {
+                const goodsCounts = {};
+
+                departureDates.forEach(date => {
+                    // Преобразуем дату в формат 'YYYY-MM-DD' для консистентности
+                    const formattedDate = formatDate(date);
+                    if (formattedDate) {
+                        if (goodsCounts[formattedDate]) {
+                            goodsCounts[formattedDate]++;
+                        } else {
+                            goodsCounts[formattedDate] = 1;
+                        }
+                    }
+                });
+
+                return goodsCounts;
+            }
+
+            // Форматируем дату в 'YYYY-MM-DD' для консистентности
+            function formatDate(dateString) {
+                const date = new Date(dateString);
+                if (!isNaN(date)) {
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const day = String(date.getDate()).padStart(2, '0');
+                    return `${year}-${month}-${day}`;
+                }
+                return null;
+            }
+
+            // Функция для расчёта и отображения среднего количества грузов в день отправки
+            function averageGoodsPerDay() {
+                const departureDates = getDepartureDates();
+                const goodsCounts = countGoodsByDate(departureDates);
+
+                // Подсчитываем общее количество отправок
+                const totalGoods = Object.values(goodsCounts).reduce((sum, count) => sum + count, 0);
+
+                // Вычисляем количество уникальных дней отправки
+                const totalDays = Object.keys(goodsCounts).length;
+
+                // Вычисляем среднее количество грузов в день отправки
+                const averageGoods = totalGoods / totalDays;
+
+                // Отображаем результат на странице
+                document.getElementById('averageGoodsResult').textContent = 'Среднее количество грузов в день отправки: ' + averageGoods.toFixed(2);
+            }
+
+            // Вызов функции для отображения среднего количества грузов
+            averageGoodsPerDay();
+
+        </script>
+    </p>
+    </p>
+    <!-- ссылка на кнопку, а внутри сама кнопка-->
+    <!-- делаем по центру -->
+
+    <!-- Контейнер для гистограммы -->
+    <div class="container my-5">
+        <h3 class="text-center text-white">Гистограмма количества грузов по дням отправки</h3>
+        <canvas id="issueChart"></canvas>
+    </div>
+
+
+</div>
+<!-- Функция очистки поиска -->
+<script type="text/javascript">
+    function clearSearch() {
+        <!-- очищаем любые символы благодаря @-->
+        window.location = "[[@{/}]]"
+    }
+</script>
+<script type="text/javascript">
+    // Функция фильтрации грузов по диапазону даты выдачи
+    function filterGoodsByDate() {
+        // Получаем введённые даты
+        const startDate = new Date(document.getElementById('startDate').value);
+        const endDate = new Date(document.getElementById('endDate').value);
+
+        // Если хотя бы одна из дат не введена, не выполняем фильтрацию
+        if (isNaN(startDate) || isNaN(endDate)) {
+            alert("Пожалуйста, введите обе даты для фильтрации.");
+            return;
+        }
+
+        // Получаем все строки таблицы
+        const rows = document.querySelectorAll('#goodsTable tbody tr');
+
+        rows.forEach(row => {
+            // Получаем дату выдачи груза из 5-го столбца (индекс 4)
+            const issueDateCell = row.querySelectorAll('td, th')[4];
+            const issueDate = new Date(issueDateCell.textContent.trim());
+
+            // Проверяем, попадает ли дата выдачи в диапазон
+            if (issueDate >= startDate && issueDate <= endDate) {
+                row.style.display = ''; // Показываем строку
+            } else {
+                row.style.display = 'none'; // Скрываем строку
+            }
+        });
+    }
+
+</script>
+
+<!-- Встроенный JavaScript для извлечения данных и построения гистограммы -->
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    // Получение данных из таблицы
+    function getIssueDates() {
+        const table = document.getElementById('goodsTable');
+        const tBody = table.querySelector('tbody');
+        const rows = tBody.querySelectorAll('tr');
+        const issueDates = [];
+
+        rows.forEach(row => {
+            // Предполагаем, что 'Дата выдачи' находится в 5-м столбце (индекс 4)
+            const cells = row.querySelectorAll('td, th');
+            const issueDateCell = cells[4];
+            const issueDate = issueDateCell.textContent.trim();
+            if (issueDate) { // Проверка на пустую дату
+                issueDates.push(issueDate);
+            }
+        });
+
+        return issueDates;
+    }
+
+    // Подсчёт количества выдач по датам
+    function countIssuesByDate(issueDates) {
+        const issueCounts = {};
+
+        issueDates.forEach(date => {
+            // Преобразуем дату в формат 'YYYY-MM-DD' для консистентности
+            const formattedDate = formatDate(date);
+            if (formattedDate) {
+                if (issueCounts[formattedDate]) {
+                    issueCounts[formattedDate]++;
+                } else {
+                    issueCounts[formattedDate] = 1;
+                }
+            }
+        });
+
+        return issueCounts;
+    }
+
+    // Форматирование даты
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        if (isNaN(date)) {
+            // Если дата не распознана, возвращаем исходную строку
+            return dateString;
+        }
+        const year = date.getFullYear();
+        const month = ('0' + (date.getMonth() + 1)).slice(-2);
+        const day = ('0' + date.getDate()).slice(-2);
+        return `${year}-${month}-${day}`;
+    }
+    // Функция фильтрациигрузов по диапазону даты выдачи
+    function filterGoodsByDate() {
+        // Получаем введённые даты
+        const startDate = new Date(document.getElementById('startDate').value);
+        const endDate = new Date(document.getElementById('endDate').value);
+        // Если хотя бы одна из дат не введена, не выполняем фильтрацию
+        if (isNaN(startDate) || isNaN(endDate)) {
+            alert("Пожалуйста, введите обе даты для фильтрации.");
+            return;
+        }
+        // Получаем все строки таблицы
+        const rows = document.querySelectorAll('#goodsTable tbody tr');
+        rows.forEach(row => {
+            // Получаем дату выдачи груза из 4-го столбца (индекс 4)
+            const issueDateCell = row.querySelectorAll('td, th')[4];
+            const issueDate = new Date(issueDateCell.textContent.trim());
+            // Проверяем, попадает ли дата выдачи в диапазон
+            if (issueDate >= startDate && issueDate <= endDate) {
+                row.style.display = ''; // Показываем строку
+            } else {
+                row.style.display = 'none'; // Скрываем строку
+            }
+        });
+    }
+    // Получение дат выдачи из таблицы
+    const issueDates = getIssueDates();
+    console.log('Даты отправки:', issueDates);
+
+    // Подсчёт количества выдач по датам
+    const issueCounts = countIssuesByDate(issueDates);
+    console.log('Количество грузов по датам отправки:', issueCounts);
+
+    // Подготовка данных для Chart.js
+    const sortedDates = Object.keys(issueCounts).sort();
+    const labels = sortedDates;
+    const data = sortedDates.map(date => issueCounts[date]);
+
+    // Проверка наличия данных
+    if (labels.length === 0) {
+        console.warn('Нет данных для отображения гистограммы.');
+    } else {
+        // Инициализация гистограммы с использованием Chart.js
+
+        const ctx = document.getElementById('issueChart').getContext('2d');// Получает 2D-контекст для рисования графика.
+        const issueChart = new Chart(ctx, {//Создает новый экземпляр графика с заданными параметрами.
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Количество выдач',
+                    data: data,
+                    backgroundColor: 'rgb(13,201,239)', // Цвет столбцов
+                    borderColor: 'rgba(24,168,183,0.77)', // Цвет границ столбцов
+                    borderWidth: 1,
+                    barThickness: 100 // Уменьшите значение, чтобы сделать столбики тоньше
+                }]
+            },
+            options: {
+                responsive: true,  // Оставляем адаптивность
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Дата отправки',
+                            color: 'white'
+                        },
+                        ticks: {
+                            color: 'white'//цвет для дат
+                        }
+                    },
+                    y: {
+                        beginAtZero: true, //Ось Y начинается с нуля.
+                        title: {
+                            display: true,
+                            text: 'Количество грузов',
+                            color: 'white'
+                        },
+                        ticks: {
+                            precision: 0, // Убирает десятичные значения на оси Y
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false // Скрыть легенду, так как она не обязательна
+                    },
+                    tooltip: {//ключает всплывающие подсказки при наведении на столбцы.
+                        enabled: true
+                    }
+                }
+            }
+        });
+    }//используется для закрытия CDATA-секции в некоторых случаях, например, при внедрении скрипта в XHTML
+    /*]]>*/
+</script>
+<script type="text/javascript">
+    //Получение дат выдачи из таблицы
+    function getIssueDates() {
+        const table = document.getElementById('goodsTable');
+        const rows = table.querySelectorAll('tbody tr');
+        const issueDates = [];
+
+        rows.forEach(row => {
+            // Получаем дату выдачи груза из 4-го столбца (индекс 3)
+            const cells = row.querySelectorAll('td, th');
+            const issueDateCell = cells[4]; // Индекс 4 для даты отправки
+            //issueDateCell ? — проверяется, существует ли ячейка с датой выдачи. Если issueDateCell не является null
+            // или undefined (то есть, ячейка существует), условие считается истинным
+            //если ячейка существует, извлекается её текстовое содержимое (textContent) и убираются пробелы в начале и
+            // в конце строки с помощью метода trim().: null — если ячейка не существует (условие ложное), присваивается значение null.
+            const issueDate = issueDateCell ? issueDateCell.textContent.trim() : null;
+
+            if (issueDate) {
+                issueDates.push(issueDate);
+            }
+        });
+
+        return issueDates;
+    }
+
+    //Подсчет количества выдач по датам
+    function countIssuesByDate(issueDates) {
+        const issueCounts = {};
+
+        issueDates.forEach(date => {
+            // Преобразуем дату в формат 'YYYY-MM-DD'
+            const formattedDate = formatDate(date);
+            if (formattedDate) {
+                if (issueCounts[formattedDate]) {
+                    issueCounts[formattedDate]++;
+                } else {
+                    issueCounts[formattedDate] = 1;
+                }
+            }
+        });
+
+        return issueCounts;
+    }
+
+    //Форматирование даты в 'YYYY-MM-DD'
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        if (isNaN(date)) {
+            // Если дата не распознана, возвращаем исходную строку
+            return null;
+        }
+        const year = date.getFullYear();
+        //Если месяц уже двухзначный (например, 12 для декабря), строка останется неизменной.
+        // Но если месяц однозначный (например, 1 для января), добавленный ранее ноль ('01') будет сохранён.
+        const month = ('0' + (date.getMonth() + 1)).slice(-2);
+        const day = ('0' + date.getDate()).slice(-2);
+        return `${year}-${month}-${day}`;
+    }
+
+    //Функция для подсчета и отображения количества выдач грузов
+    function displayIssueCount() {
+        const issueDates = getIssueDates();
+        const issueCounts = countIssuesByDate(issueDates);
+
+        const selectedDate = document.getElementById('selectedDate').value;
+        const formattedSelectedDate = formatDate(selectedDate);
+        //Если для выбранной даты данных нет, count будет равен 0
+        const count = issueCounts[formattedSelectedDate] || 0;
+
+        //Выводим результат
+        //.textContent — свойство textContent используется для установки текстового содержимого элемента
+
+        document.getElementById('issueCountResult').textContent = `Количество отправки грузов за ${formattedSelectedDate}: ${count}`;
+
+    }
+</script>
 </body>
 </html>
