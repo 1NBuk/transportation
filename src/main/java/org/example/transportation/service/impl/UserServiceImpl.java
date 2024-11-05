@@ -20,6 +20,9 @@ public class UserServiceImpl implements UserService {
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
 
+    // Заранее установленный admin пароль (можно вынести в настройки приложения)
+    private final String ADMIN_PASSWORD = "aaa";
+
     public UserServiceImpl(UserRepository userRepository,
                            RoleRepository roleRepository,
                            PasswordEncoder passwordEncoder) {
@@ -36,12 +39,26 @@ public class UserServiceImpl implements UserService {
         // encrypt the password using spring security
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
-        Role role = roleRepository.findByName("ROLE_USER");
-        if(role == null){
-            role = checkRoleExist();
+        // Логика присвоения роли
+        Role role;
+
+        // Проверяем введённый "admin пароль"
+        if (ADMIN_PASSWORD.equals(userDto.getAdminPassword())) {
+            // Если пароль совпадает, назначаем роль администратора
+            role = roleRepository.findByName("ROLE_ADMIN");
+            if (role == null) {
+                role = createRoleIfNotExist("ROLE_ADMIN");
+            }
+        } else {
+            // Если пароль не введён или не совпадает, назначаем роль пользователя
+            role = roleRepository.findByName("ROLE_USER");
+            if (role == null) {
+                role = createRoleIfNotExist("ROLE_USER");
+            }
         }
-        user.setRoles(Arrays.asList(role));
-        userRepository.save(user);
+
+        user.setRoles(Arrays.asList(role)); // Присваиваем пользователю соответствующую роль
+        userRepository.save(user); // Сохраняем пользователя в БД
     }
 
     @Override
@@ -53,7 +70,7 @@ public class UserServiceImpl implements UserService {
     public List<UserDto> findAllUsers() {
         List<User> users = userRepository.findAll();
         return users.stream()
-                .map((user) -> mapToUserDto(user))
+                .map(this::mapToUserDto)
                 .collect(Collectors.toList());
     }
 
@@ -66,9 +83,9 @@ public class UserServiceImpl implements UserService {
         return userDto;
     }
 
-    private Role checkRoleExist(){
+    private Role createRoleIfNotExist(String roleName) {
         Role role = new Role();
-        role.setName("ROLE_USER");
+        role.setName(roleName);
         return roleRepository.save(role);
     }
 }

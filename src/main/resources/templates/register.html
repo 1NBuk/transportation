@@ -10,7 +10,7 @@
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
           crossorigin="anonymous">
 </head>
-<body>
+<body style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://cargomaster.info/wp-content/uploads/2023/04/perevozki-kontejnerami.jpg'); background-size: cover; background-position: center; height: 100vh; overflow: auto;">
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" th:href="@{/index}">Система регистрации и входа</a>
@@ -99,6 +99,17 @@
                         />
                         <p th:errors = "*{password}" class="text-danger"
                            th:if="${#fields.hasErrors('password')}"></p>
+                    </div>
+                    <!-- Поле для ввода пароля администратора -->
+                    <div class="form-group mb-3">
+                        <label for="adminPassword">Если вы админ, то напишите пароль</label>
+                        <input
+                                type="password"
+                                id="adminPassword"
+                                name="adminPassword"
+                                class="form-control"
+                                placeholder="Введите Admin пароль"
+                        />
                     </div>
                     <div class="form-group">
                         <button class="btn btn-primary" type="submit">Зарегистрироваться</button>
