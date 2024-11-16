@@ -20,4 +20,8 @@ public class BlogUserController {
         model.addAttribute("blogPosts", blogPostService.getAllPosts());
         return "user_blog";
     }
+    @GetMapping("/")
+    public String homePage() {
+        return "index_user"; // Убедитесь, что шаблон index.html существует
+    }
 }

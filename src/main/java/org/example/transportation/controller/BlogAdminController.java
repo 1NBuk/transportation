@@ -72,4 +72,8 @@ public class BlogAdminController {
         blogPostService.deleteBlogPost(id);
         return "redirect:/admin_blog";
     }
+    @GetMapping("/")
+    public String homePage() {
+        return "index"; // Убедитесь, что шаблон index.html существует
+    }
 }

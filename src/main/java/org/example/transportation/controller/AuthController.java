@@ -36,7 +36,7 @@ public class AuthController {
     // handler method to handle home page request
     @GetMapping("/")
     public String home(){
-        return "/";
+        return "/login";
     }
 
     // handler method to handle login request
