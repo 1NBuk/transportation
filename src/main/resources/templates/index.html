@@ -315,16 +315,109 @@ colspan задает количество ячеек, объединенных �
         <h3 class="text-center text-white">Гистограмма количества грузов по дням отправки</h3>
         <canvas id="issueChart"></canvas>
     </div>
-
-    <!-- Кнопка добавления грузов -->
     <blockquote class="blockquote text-center">
-        <a href="/new">
-            <!--Кнопка с классом Bootstrap, который делает ее синей (btn-primary).-->
-            <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
-                Добавить груз
-            </button>
-        </a>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addBarbishModal">
+            Добавить запись
+        </button>
     </blockquote>
+
+
+    <!-- Модальное окно для добавления записи -->
+    <div class="modal fade" id="addBarbishModal" tabindex="-1" role="dialog" aria-labelledby="addBarbishModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addBarbishModalLabel">Добавить запись</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/save}" th:object="${good}" method="post">
+                        <table>
+                            <!-- указываем перемнные напрямую, поэтому *-->
+                            <tr>
+                                <td>ID груза:</td>
+                                <td><input type="text"
+                                           onkeyup="this.value = this.value.replace(/[^0-9]/g, '');"
+                                           onchange="this.value = this.value.replace(/[^0-9]/g, '');"
+                                           maxlength="10"
+                                           th:field="*{id}"
+                                           required></td>
+                            </tr>
+                            <tr>
+                                <td>Название груза:</td>
+                                <td><input type="text" th:field="*{good_name}" required></td>
+                            </tr>
+                            <tr>
+                                <td>Содержимое:</td>
+                                <td><input type="text" th:field="*{content}" required></td>
+                            </tr>
+                            <tr>
+                                <td>Город отпрвки:</td>
+                                <td><input type="text" th:field="*{departure_city}" required></td>
+                            </tr>
+                            <td>Дата отправки:</td>
+                            <!--
+                            onkeyup: Срабатывает каждый раз, когда пользователь отпускает клавишу после нажатия в текстовом поле.
+                            Это позволяет динамически обрабатывать вводимые данные в реальном времени.
+                            onchange: Срабатывает, когда значение в поле изменилось и фокус с поля потерян (например, при нажатии на другую область страницы).
+                            Это позволяет выполнять проверку или обработку данных после завершения ввода.
+                            -->
+                            <td>
+                                <!--
+                                [^0-9.] — удаляет все символы, кроме цифр и точек.
+                                 (\..*)\. — предотвращает ввод более одной точки подряд.
+                                 ^(\d{2})(\d) — после ввода двух цифр, автоматически добавляет точку.
+                                 ^(\d{2}\.\d{2})(\d) — после ввода ещё двух цифр (месяца), автоматически добавляет ещё одну точку.
+                                 maxlength="10" — ограничивает ввод до 10 символов (например, 12.05.2023).
+                                 -->
+                                <input type="text"
+                                       onkeyup="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1'); this.value = this.value.replace(/^(\d{2})(\d)/g, '$1.$2'); this.value = this.value.replace(/^(\d{2}\.\d{2})(\d)/g, '$1.$2');"
+                                       onchange="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1'); this.value = this.value.replace(/^(\d{2})(\d)/g, '$1.$2'); this.value = this.value.replace(/^(\d{2}\.\d{2})(\d)/g, '$1.$2');"
+                                       maxlength="10"
+                                       th:field="*{departure_date}"
+                                       required>
+                            </td>
+                            </tr>
+                            <tr>
+                                <td>Город прибытия:</td>
+                                <td><input type="text" th:field="*{arrival_city}" required></td>
+                            </tr>
+                            <tr>
+                                <td>Дата прибытия:</td>
+                                <td>
+                                    <input type="text"
+                                           onkeyup="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1'); this.value = this.value.replace(/^(\d{2})(\d)/g, '$1.$2'); this.value = this.value.replace(/^(\d{2}\.\d{2})(\d)/g, '$1.$2');"
+                                           onchange="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1'); this.value = this.value.replace(/^(\d{2})(\d)/g, '$1.$2'); this.value = this.value.replace(/^(\d{2}\.\d{2})(\d)/g, '$1.$2');"
+                                           maxlength="10"
+                                           th:field="*{arrival_date}"
+                                           required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <!--
+                                data-toggle="button" — используется для изменения поведения кнопки (включения/выключения).
+                                aria-pressed="false" — атрибут для обеспечения доступности, указывает, что кнопка не нажата.
+                                autocomplete="off" — отключает автозаполнение полей формы.
+                                    -->
+                                    <button type="submit" class="btn btn-primary" data-togge="button" aria-pressed="false" autocomplete="off">Сохранить</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Подключение Bootstrap скриптов -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
 </div>
 <!-- Функция очистки поиска -->
 <script type="text/javascript">
@@ -589,6 +682,14 @@ colspan задает количество ячеек, объединенных �
         document.getElementById('issueCountResult').textContent = `Количество отправки грузов за ${formattedSelectedDate}: ${count}`;
 
     }
+
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
+        integrity="sha384-W8fXg8RghC+fLwbI6r+Pvc0IRWAqBdq0FTCVNGTSAuCWG7tEFl1UMT20W23d2tZm"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+        integrity="sha384-QJHtvGhmr9f6Ul9e8iSL7oKpM5pQt9OK6xz9Q72GujpKwj5RnRYoWbflE5cf6gH+"
+        crossorigin="anonymous"></script>
+
 </body>
 </html>
