@@ -204,14 +204,92 @@ colspan задает количество ячеек, объединенных �
                 (путь формируется с использованием ID груза ${good.id}).
                 Кнопка с классом btn btn-info — синяя кнопка Bootstrap.
                 -->
-                <a th:href="@{'/edit/' + ${good.id}}"><button type="button" class="btn btn-info">Редактировать</button></a>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editGood">Редактировать</button>
                 <a th:href="@{'/delete/' + ${good.id}}"><button type="button" class="btn btn-danger">Удалить</button></a>
             </td>
         </tr>
-
         </tbody>
     </table>
 
+    <!-- Модальное окно для изменения записи -->
+    <div class="modal fade" id="editGood" tabindex="-1" role="dialog" aria-labelledby="editGoodLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editGoodLabel">Редактировать</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <form th:action="@{/save}" th:object="${good}" method="post">
+                        <table>
+                            <tr>
+                                <!-- указываем перемнные напрямую, поэтому *; говорим, что id неизменяемый=> readonly-->
+                                <!--g-все совпадения в строке
+                                шаблон ищет любой символ, который не является цифрой
+                                '' — замена
+                                -->
+                                <td>ID груза:</td>
+                                <td><input type="text"
+                                           onkeyup="this.value = this.value.replace(/[^0-9]/g, '');"
+                                           onchange="this.value = this.value.replace(/[^0-9]/g, '');"
+                                           maxlength="10"
+                                           th:field="*{id}"
+                                           required></td>
+                            </tr>
+                            <tr>
+                                <td>Название груза:</td>
+                                <td><input type="text" th:field="*{good_name}" required></td>
+                            </tr>
+                            <tr>
+                                <td>Содержимое:</td>
+                                <td><input type="text" th:field="*{content}" required></td>
+                            </tr>
+                            <tr>
+                                <td>Город отпрвки:</td>
+                                <td><input type="text" th:field="*{departure_city}" required></td>
+                            </tr>
+                            <tr>
+                                <td>Дата отправки:</td>
+                                <td>
+                                    <input type="text"
+                                           onkeyup="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1'); this.value = this.value.replace(/^(\d{2})(\d)/g, '$1.$2'); this.value = this.value.replace(/^(\d{2}\.\d{2})(\d)/g, '$1.$2');"
+                                           onchange="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1'); this.value = this.value.replace(/^(\d{2})(\d)/g, '$1.$2'); this.value = this.value.replace(/^(\d{2}\.\d{2})(\d)/g, '$1.$2');"
+                                           maxlength="10"
+                                           th:field="*{departure_date}"
+                                           required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Город прибытия:</td>
+                                <td><input type="text" th:field="*{arrival_city}" required></td>
+                            </tr>
+                            <tr>
+                                <td>Дата прибытия:</td>
+                                <td>
+                                    <input type="text"
+                                           onkeyup="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1'); this.value = this.value.replace(/^(\d{2})(\d)/g, '$1.$2'); this.value = this.value.replace(/^(\d{2}\.\d{2})(\d)/g, '$1.$2');"
+                                           onchange="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1'); this.value = this.value.replace(/^(\d{2})(\d)/g, '$1.$2'); this.value = this.value.replace(/^(\d{2}\.\d{2})(\d)/g, '$1.$2');"
+                                           maxlength="10"
+                                           th:field="*{arrival_date}"
+                                           required>
+                                </td>
+                            </tr>
+                            <!-- кнопка -->
+                            <tr>
+                                <!-- Ячейка таблицы, которая занимает две колонки (атрибут colspan="2"). -->
+                                <td colspan="2">
+                                    <button type="submit" class="btn btn-primary" data-togge="button" aria-pressed="false" th:autocomplete="off">Отправить</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- с помощью javascript считаем кол-во студентов-->
     <!-- Счётчик количества грузов -->
     <p class="text-white">
