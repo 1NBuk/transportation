@@ -114,12 +114,17 @@ public class AppController { // Создаем класс с модификат�
 
 
     //контроллер по редактированию книг по ключу id
-    @RequestMapping("/edit/{id}")
-    public ModelAndView showEditGoodForm(@PathVariable(name = "id") Long id) {
-        ModelAndView mav = new ModelAndView("edit_good"); // Добавляем шаблон в модель
-        Good good = service.get(id);  // Получаем книгу по ID
-        mav.addObject("good", good);  // Передаем объект книги в шаблон
-        return mav; // Возвращаем полностью модель
+    @GetMapping("/edit/{id}")
+    @ResponseBody
+    public Good getGoodById(@PathVariable(name = "id") Long id) {
+        return service.get(id); // Возвращаем объект для редактирования
+    }
+
+    // Сохранение изменений (AJAX)
+    @PostMapping("/edit")
+    public String saveEditedGood(@ModelAttribute("good") Good good) {
+        service.save(good);
+        return "redirect:/goods"; // Перенаправление на список
     }
 
     @RequestMapping("/delete/{id}")
