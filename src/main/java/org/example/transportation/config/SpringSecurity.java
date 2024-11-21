@@ -43,7 +43,9 @@ public class SpringSecurity {
                 .logout(
                         logout -> logout
                                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                                .permitAll()
+                                .logoutSuccessUrl("/login") // Перенаправление на страницу входа
+                                .invalidateHttpSession(true) // Завершить сессию
+                                .deleteCookies("JSESSIONID") // Удалить куки для сессии
                 );
         return http.build();
     }

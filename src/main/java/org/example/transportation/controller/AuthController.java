@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.example.transportation.dto.UserDto;
 import org.example.transportation.entity.User;
 import org.example.transportation.service.UserService;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
 
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class AuthController {
@@ -39,10 +41,21 @@ public class AuthController {
         return "/login";
     }
 
-    // handler method to handle login request
     @GetMapping("/login")
-    public String login() {
-        return "login"; // отображение формы логина
+    public String login(Authentication authentication) {
+        // Проверяем, аутентифицирован ли пользователь
+        if (authentication != null && authentication.isAuthenticated()) {
+            Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
+
+            // Перенаправляем в зависимости от роли
+            if (roles.contains("ROLE_ADMIN")) {
+                return "redirect:/index";
+            } else if (roles.contains("ROLE_USER")) {
+                return "redirect:/index_user";
+            }
+        }
+        // Если пользователь не аутентифицирован, отображаем страницу входа
+        return "login";
     }
 
     // после логина перенаправляем на главную страницу с грузами
