@@ -29,6 +29,33 @@
     </div>
 </nav>
 
+<form id="searchForm" action="/admin_blog/search" method="get" class="mb-4">
+    <div class="row g-2">
+        <div class="col-md-4">
+            <input type="text" name="title" class="form-control" placeholder="Поиск по названию">
+        </div>
+        <div class="col-md-4">
+            <input type="text" name="content" class="form-control" placeholder="Поиск по содержанию">
+        </div>
+        <div class="col-md-4">
+            <input type="date" name="date" class="form-control" placeholder="Поиск по дате">
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col text-center">
+            <button type="submit" class="btn btn-primary">Искать</button>
+            <button type="button" class="btn btn-secondary" onclick="clearForm()">Очистить</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    function clearForm() {
+        document.getElementById("searchForm").reset();
+        window.location.href = '/admin_blog'; // Перенаправление на начальную страницу
+    }
+</script>
+
 <div class="container mt-4">
     <h1 class="text-center mb-4">Управление блогами</h1>
     <div class="list-group">
