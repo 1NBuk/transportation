@@ -28,7 +28,6 @@
         </div>
     </div>
 </nav>
-
 <form id="searchForm" action="/admin_blog/search" method="get" class="mb-4">
     <div class="row g-2">
         <div class="col-md-4">
@@ -55,17 +54,55 @@
         window.location.href = '/admin_blog'; // Перенаправление на начальную страницу
     }
 </script>
-
 <div class="container mt-4">
     <h1 class="text-center mb-4">Управление блогами</h1>
-    <div class="list-group">
-        <div class="list-group-item" th:each="blogPost : ${blogPosts}">
-            <h5 class="mb-1" th:text="${blogPost.title}">Название блога</h5>
-            <p class="mb-1" th:text="${blogPost.content}">Содержание блога</p>
-            <small class="text-muted" th:text="${blogPost.createdDate}">Дата публикации</small>
-            <div class="mt-2">
-                <a th:href="@{/admin_blog/edit/{id}(id=${blogPost.id})}" class="btn btn-sm btn-warning">Редактировать</a>
-                <a th:href="@{/admin_blog/delete/{id}(id=${blogPost.id})}" class="btn btn-sm btn-danger">Удалить</a>
+    <div class="row g-3" th:each="blogPost : ${blogPosts}">
+        <div class="col-md-12">
+            <div class="card mb-3">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <!-- Если imageUrl пустое, используем значение по умолчанию -->
+                        <img th:src="${blogPost.imageUrl != null ? blogPost.imageUrl : 'https://cdn1.ozone.ru/s3/multimedia-1-z/6980409107.jpg'}"
+                             class="img-fluid rounded-start" alt="Изображение блога">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${blogPost.title}">Название блога</h5>
+                            <p class="card-text" id="content-${blogPost.id}" th:text="${blogPost.content}"></p>
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    document.querySelectorAll('.card-text').forEach(function (element) {
+                                        let words = element.textContent.split(' ');
+                                        if (words.length > 50) {
+                                            element.textContent = words.slice(0, 50).join(' ') + '...';
+                                        }
+                                    });
+                                });
+                            </script>
+                            <p class="card-text">
+                                <small class="text-muted" th:text="${#temporals.format(blogPost.createdDate, 'yyyy-MM-dd HH:mm')}">Дата публикации</small>
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a th:href="@{/admin_blog/{id}(id=${blogPost.id})}" class="btn btn-primary">Подробнее</a>
+
+                                <div>
+                                    <!-- Показываем только значки, убираем ссылки -->
+                                    <a th:href="${blogPost.vkLink}" target="_blank">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/2/21/VK.com-logo.svg"
+                                             class="social-icon" alt="ВКонтакте" style="width: 24px; height: 24px;">
+                                    </a>
+                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtVYG9fRC6Wb52UoRx236g0i29P0IVlcrYmA&s" class="social-icon" alt="Facebook" style="width: 24px; height: 24px;">
+                                    <img src="https://pngicon.ru/file/uploads/odnoklassniki.png" class="social-icon" alt="Одноклассники" style="width: 24px; height: 24px;">
+                                    <img src="https://cdn-icons-png.flaticon.com/512/145/145812.png" class="social-icon" alt="Twitter" style="width: 24px; height: 24px;">
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <a th:href="@{/admin_blog/edit/{id}(id=${blogPost.id})}" class="btn btn-sm btn-warning">Редактировать</a>
+                                <a th:href="@{/admin_blog/delete/{id}(id=${blogPost.id})}" class="btn btn-sm btn-danger">Удалить</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

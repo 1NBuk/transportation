@@ -37,6 +37,14 @@
             <label for="content" class="form-label">Текст</label>
             <textarea class="form-control" id="content" name="content" rows="5" th:text="${blogPost.content}" required></textarea>
         </div>
+        <div class="mb-3">
+            <label for="image_url" class="form-label">Изображение (URL)</label>
+            <textarea class="form-control" id="image_url" name="imageUrl" rows="1" th:text="${blogPost.imageUrl}" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="vkLink">Ссылка на ВКонтакте</label>
+            <input type="url" class="form-control" id="vkLink" name="vkLink" th:value="${blogPost.vkLink}" placeholder="https://vk.com/example">
+        </div>
         <button type="submit" class="btn btn-success">Сохранить</button>
     </form>
 </div>

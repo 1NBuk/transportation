@@ -21,17 +21,27 @@ public class BlogPost {
 
     @Column(nullable = false)  // Поле "Кто добавил", обязательное
     private String createdBy;
+    @Column(nullable = true)  // Поле "URL изображения", необязательно
+    private String imageUrl;
+
+    @Column(nullable = true) // Новый столбец для ссылки ВКонтакте
+    private String vkLink;
 
     // Конструктор по умолчанию
     public BlogPost() {
     }
 
     // Конструктор с параметрами
-    public BlogPost(String title, String content, LocalDateTime createdDate, String createdBy) {
+    public BlogPost(String title, String content, LocalDateTime createdDate, String createdBy, String imageUrl, String vkLink) {
         this.title = title;
         this.content = content;
         this.createdDate = createdDate;
         this.createdBy = createdBy;
+        this.imageUrl = (imageUrl == null || imageUrl.isBlank())
+                ? "https://cdn1.ozone.ru/s3/multimedia-1-z/6980409107.jpg"
+                : imageUrl;
+        this.vkLink = vkLink;
+
     }
 
     // Геттеры и сеттеры
@@ -73,5 +83,20 @@ public class BlogPost {
 
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
+    }
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+    // Геттеры и сеттеры
+    public String getVkLink() {
+        return vkLink;
+    }
+
+    public void setVkLink(String vkLink) {
+        this.vkLink = vkLink;
     }
 }

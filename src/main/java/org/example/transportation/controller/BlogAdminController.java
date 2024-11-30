@@ -75,20 +75,33 @@ public class BlogAdminController {
         blogPostService.deleteBlogPost(id);
         return "redirect:/admin_blog";
     }
+
+    // Главная страница
     @GetMapping("/")
     public String homePage() {
         return "index"; // Убедитесь, что шаблон index.html существует
     }
 
+    // Поиск записей блога
     @GetMapping("/search")
+    @Secured("ROLE_ADMIN")
     public String searchBlogPosts(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String content,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam(required = false) String imageUrl,
             Model model) {
 
-        List<BlogPost> searchResults = blogPostService.searchBlogPosts(title, content, date);
+        List<BlogPost> searchResults = blogPostService.searchBlogPosts(title, content, date, imageUrl);
         model.addAttribute("blogPosts", searchResults);
-        return "admin_blog";
+        return "admin_blog";  // Возвращает страницу администратора с результатами поиска
     }
+    // Просмотр полного текста блога
+    @GetMapping("/{id}")
+    public String viewBlogDetails(@PathVariable("id") Long id, Model model) {
+        BlogPost blogPost = blogPostService.getPostById(id);
+        model.addAttribute("blogPost", blogPost);
+        return "blog_details";
+    }
+
 }
