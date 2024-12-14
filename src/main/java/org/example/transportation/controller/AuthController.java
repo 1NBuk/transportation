@@ -42,21 +42,20 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public String login(Authentication authentication) {
-        // Проверяем, аутентифицирован ли пользователь
+    public String login(Authentication authentication, Model model) {
         if (authentication != null && authentication.isAuthenticated()) {
             Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
-
-            // Перенаправляем в зависимости от роли
             if (roles.contains("ROLE_ADMIN")) {
                 return "redirect:/index";
             } else if (roles.contains("ROLE_USER")) {
                 return "redirect:/index_user";
             }
         }
-        // Если пользователь не аутентифицирован, отображаем страницу входа
+        model.addAttribute("user", new UserDto());
         return "login";
     }
+
+
 
     // после логина перенаправляем на главную страницу с грузами
     // после логина перенаправляем на главную страницу с грузами
@@ -100,23 +99,22 @@ public class AuthController {
 
     // handler method to handle user registration form submit request
     @PostMapping("/register/save")
-    public String registration(@Valid @ModelAttribute("user") UserDto userDto,
-                               BindingResult result,
-                               Model model){
+    public String saveUser(@Valid @ModelAttribute("user") UserDto userDto,
+                           BindingResult result,
+                           Model model) {
         User existingUser = userService.findUserByEmail(userDto.getEmail());
 
-        if(existingUser != null && existingUser.getEmail() != null && !existingUser.getEmail().isEmpty()){
-            result.rejectValue("email", null,
-                    "There is already an account registered with the same email");
+        if (existingUser != null && existingUser.getEmail() != null && !existingUser.getEmail().isEmpty()) {
+            result.rejectValue("email", null, "This email is already registered.");
         }
 
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
             model.addAttribute("user", userDto);
-            return "/register";
+            return "register"; // отображает форму регистрации при ошибках
         }
 
         userService.saveUser(userDto);
-        return "redirect:/register?success";
+        return "redirect:/login?success"; // редирект на страницу логина после успешной регистрации
     }
 
 

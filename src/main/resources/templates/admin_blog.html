@@ -86,15 +86,31 @@
                                 <a th:href="@{/admin_blog/{id}(id=${blogPost.id})}" class="btn btn-primary">Подробнее</a>
 
                                 <div>
-                                    <!-- Показываем только значки, убираем ссылки -->
-                                    <a th:href="${blogPost.vkLink}" target="_blank">
+                                    <!-- Ссылка на ВКонтакте -->
+                                    <a th:href="${blogPost.vkLink}" target="_blank" th:if="${blogPost.vkLink != null}">
                                         <img src="https://upload.wikimedia.org/wikipedia/commons/2/21/VK.com-logo.svg"
                                              class="social-icon" alt="ВКонтакте" style="width: 24px; height: 24px;">
                                     </a>
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtVYG9fRC6Wb52UoRx236g0i29P0IVlcrYmA&s" class="social-icon" alt="Facebook" style="width: 24px; height: 24px;">
-                                    <img src="https://pngicon.ru/file/uploads/odnoklassniki.png" class="social-icon" alt="Одноклассники" style="width: 24px; height: 24px;">
-                                    <img src="https://cdn-icons-png.flaticon.com/512/145/145812.png" class="social-icon" alt="Twitter" style="width: 24px; height: 24px;">
+
+                                    <!-- Ссылка на Facebook -->
+                                    <a th:href="${blogPost.facebookLink}" target="_blank" th:if="${blogPost.facebookLink != null}">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/145/145802.png"
+                                             class="social-icon" alt="Facebook" style="width: 24px; height: 24px;">
+                                    </a>
+
+                                    <!-- Ссылка на Одноклассники -->
+                                    <a th:href="${blogPost.odnkLink}" target="_blank" th:if="${blogPost.odnkLink != null}">
+                                        <img src="https://pngicon.ru/file/uploads/odnoklassniki.png"
+                                             class="social-icon" alt="Одноклассники" style="width: 24px; height: 24px;">
+                                    </a>
+
+                                    <!-- Ссылка на Twitter -->
+                                    <a th:href="${blogPost.twitterLink}" target="_blank" th:if="${blogPost.twitterLink != null}">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/145/145812.png"
+                                             class="social-icon" alt="Twitter" style="width: 24px; height: 24px;">
+                                    </a>
                                 </div>
+
                             </div>
                             <div class="mt-3">
                                 <a th:href="@{/admin_blog/edit/{id}(id=${blogPost.id})}" class="btn btn-sm btn-warning">Редактировать</a>

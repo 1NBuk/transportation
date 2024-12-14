@@ -72,16 +72,68 @@
                             />
                         </div>
                         <div class="form-group mb-3">
-                            <button type="submit" class="btn btn-primary" >Сохранить</button>
-                            <span> Не зарегистрированы?
-                                <a th:href="@{/register}">Зарегистрироваться/Войти здесь</a>
-                            </span>
+                            <button class="btn btn-primary" type="submit">Войти</button>
+                            <span class="text-primary">Еще не зарегистрированы? <a data-bs-toggle="modal" data-bs-target="#registerModal">Зарегистрируйтесь здесь</a></span>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Модальное окно для регистрации -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerModalLabel">Регистрация</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" th:action="@{/register/save}" th:object="${user}">
+                        <div class="form-group mb-3">
+                            <label class="form-label">Имя</label>
+                            <input class="form-control" id="firstName" name="firstName" placeholder="Введите имя" th:field="*{firstName}" type="text"/>
+                            <p th:errors="*{firstName}" class="text-danger"></p>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label">Фамилия</label>
+                            <input class="form-control" id="lastName" name="lastName" placeholder="Введите фамилию" th:field="*{lastName}" type="text"/>
+                            <p th:errors="*{lastName}" class="text-danger"></p>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label">Email</label>
+                            <input class="form-control" id="email" name="email" placeholder="Введите email адрес" th:field="*{email}" type="email"/>
+                            <p th:errors="*{email}" class="text-danger"></p>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label">Пароль</label>
+                            <input class="form-control" id="password1" name="password1" placeholder="Введите пароль" th:field="*{password}" type="password"/>
+                            <p th:errors="*{password}" class="text-danger"></p>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="adminPassword">Если вы админ, то напишите пароль</label>
+                            <input type="password" id="adminPassword" name="adminPassword" class="form-control" placeholder="Введите Admin пароль"/>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary" type="submit">Зарегистрироваться</button>
+                            <span class="text-primary">Уже зарегистрированы? <a data-bs-toggle="modal" data-bs-target="#registerModal">Войти здесь</a></span>
+                        </div>
+
+                        </span>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
 </body>
 </html>

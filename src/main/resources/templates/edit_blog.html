@@ -45,6 +45,19 @@
             <label for="vkLink">Ссылка на ВКонтакте</label>
             <input type="url" class="form-control" id="vkLink" name="vkLink" th:value="${blogPost.vkLink}" placeholder="https://vk.com/example">
         </div>
+        <div class="form-group">
+            <label for="facebookLink">Ссылка на Facebook</label>
+            <input type="url" class="form-control" id="facebookLink" name="facebookLink" th:value="${blogPost.facebookLink}" placeholder="https://facebook.com/example">
+        </div>
+        <div class="form-group">
+            <label for="odnkLink">Ссылка на Одноклассники</label>
+            <input type="url" class="form-control" id="odnkLink" name="odnkLink" th:value="${blogPost.odnkLink}" placeholder="https://ok.ru/example">
+        </div>
+        <div class="form-group">
+            <label for="twitterLink">Ссылка на Twitter</label>
+            <input type="url" class="form-control" id="twitterLink" name="twitterLink" th:value="${blogPost.twitterLink}" placeholder="https://twitter.com/example">
+        </div>
+
         <button type="submit" class="btn btn-success">Сохранить</button>
     </form>
 </div>

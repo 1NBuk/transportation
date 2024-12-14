@@ -26,7 +26,14 @@ public class BlogPost {
 
     @Column(nullable = true) // Новый столбец для ссылки ВКонтакте
     private String vkLink;
+    @Column(nullable = true) // Поле для ссылки на Facebook
+    private String facebookLink;
 
+    @Column(nullable = true) // Поле для ссылки на Одноклассники
+    private String odnkLink;
+
+    @Column(nullable = true) // Поле для ссылки на Twitter
+    private String twitterLink;
     // Конструктор по умолчанию
     public BlogPost() {
     }
@@ -41,7 +48,9 @@ public class BlogPost {
                 ? "https://cdn1.ozone.ru/s3/multimedia-1-z/6980409107.jpg"
                 : imageUrl;
         this.vkLink = vkLink;
-
+        this.facebookLink = facebookLink;
+        this.odnkLink = odnkLink;
+        this.twitterLink = twitterLink;
     }
 
     // Геттеры и сеттеры
@@ -98,5 +107,28 @@ public class BlogPost {
 
     public void setVkLink(String vkLink) {
         this.vkLink = vkLink;
+    }
+    public String getFacebookLink() {
+        return facebookLink;
+    }
+
+    public void setFacebookLink(String facebookLink) {
+        this.facebookLink = facebookLink;
+    }
+
+    public String getOdnkLink() {
+        return odnkLink;
+    }
+
+    public void setOdnkLink(String odnkLink) {
+        this.odnkLink = odnkLink;
+    }
+
+    public String getTwitterLink() {
+        return twitterLink;
+    }
+
+    public void setTwitterLink(String twitterLink) {
+        this.twitterLink = twitterLink;
     }
 }

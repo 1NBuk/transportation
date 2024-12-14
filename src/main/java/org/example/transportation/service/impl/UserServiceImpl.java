@@ -61,6 +61,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user); // Сохраняем пользователя в БД
     }
 
+
     @Override
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email);
