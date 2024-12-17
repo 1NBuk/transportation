@@ -43,6 +43,8 @@ colspan задает количество ячеек, объединенных �
     <!-- Подключение Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <!--Подключение Font Awesome, чтобы использовать иконки социальных сетей-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <!-- Подключение Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -57,6 +59,22 @@ colspan задает количество ячеек, объединенных �
     height: 500px; — задает фиксированную высоту элемента в 500 пикселей.
     -->
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        section, div, footer {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
         #issueChart {
             padding-left: 0;
             padding-right: 0;
@@ -435,7 +453,7 @@ colspan задает количество ячеек, объединенных �
                 <div class="modal-body">
                     <form th:action="@{/save}" th:object="${good}" method="post">
                         <table>
-                            <!-- указываем перемнные напрямую, поэтому *-->
+                            <!-- указываем переменные напрямую, поэтому *-->
                             <tr>
                                 <td>ID груза:</td>
                                 <td><input type="text"
@@ -454,7 +472,7 @@ colspan задает количество ячеек, объединенных �
                                 <td><input type="text" th:field="*{content}" required></td>
                             </tr>
                             <tr>
-                                <td>Город отпрвки:</td>
+                                <td>Город отправки:</td>
                                 <td><input type="text" th:field="*{departure_city}" required></td>
                             </tr>
                             <td>Дата отправки:</td>
@@ -790,6 +808,258 @@ colspan задает количество ячеек, объединенных �
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
         integrity="sha384-QJHtvGhmr9f6Ul9e8iSL7oKpM5pQt9OK6xz9Q72GujpKwj5RnRYoWbflE5cf6gH+"
         crossorigin="anonymous"></script>
+
+
+<footer class="footer">
+
+    <style>
+        /* Общий стиль футера */
+        .footer {
+            background: linear-gradient(to top, #073642, #0b3a53);
+            color: #ffffff;
+            padding: 40px 20px;
+            font-family: Arial, sans-serif;
+            position: relative;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .footer-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .footer-logo p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #a5c4d4;
+        }
+
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links ul li {
+            margin: 5px 0;
+        }
+
+        .footer-links ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .footer-links ul li a:hover {
+            color: #13a4f2;
+        }
+
+        .footer-social a {
+            margin-right: 10px;
+            color: #ffffff;
+            font-size: 20px;
+            transition: color 0.3s;
+        }
+
+        .footer-social a:hover {
+            color: #13a4f2;
+        }
+
+        .footer-subscribe p {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .footer-subscribe form {
+            display: flex;
+        }
+
+        .footer-subscribe input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ffffff;
+            border-radius: 3px;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+
+        .footer-subscribe button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #13a4f2;
+            color: #ffffff;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .footer-subscribe button:hover {
+            background-color: #0b82c2;
+        }
+
+        .footer-bottom {
+            margin-top: 20px;
+            border-top: 1px solid #1c4960;
+            padding-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #a5c4d4;
+        }
+
+        .footer-bottom ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .footer-bottom ul li a {
+            color: #a5c4d4;
+            text-decoration: none;
+        }
+
+        .footer-bottom ul li a:hover {
+            color: #ffffff;
+        }
+
+        section {
+            padding: 60px 20px;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #ddd;
+        }
+
+        section h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        section p {
+            font-size: 16px;
+            color: #555;
+        }
+
+    </style>
+
+    <div class="footer-container">
+        <div class="footer-logo">
+            <h1>Перевозка грузов</h1>
+            <p>info@cargo-system.com</p>
+            <p>+7 800 555 35 35</p>
+        </div>
+
+        <div class="footer-links">
+            <ul>
+                <li><a href="#about">О нас</a></li>
+                <li><a href="#services">Услуги</a></li>
+                <li><a href="#faq">Частые вопросы</a></li>
+                <li><a href="#blog">Блог</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-social">
+            <a th:href="${blogPost.facebookLink}" target="_blank" th:if="${blogPost.facebookLink != null}"><i class="fa fa-facebook"></i> <img src="https://cdn-icons-png.flaticon.com/512/145/145802.png"
+                                                            class="social-icon" alt="Facebook" style="width: 24px; height: 24px;"></a>
+            <a th:href="${blogPost.twitterLink}" target="_blank" th:if="${blogPost.twitterLink != null}"><i class="fa fa-twitter"></i> <img src="https://cdn-icons-png.flaticon.com/512/145/145812.png"
+                                                           class="social-icon" alt="Twitter" style="width: 24px; height: 24px;"></a>
+            <a th:href="${blogPost.odnkLink}" target="_blank" th:if="${blogPost.odnkLink != null}"><i class="fa fa-instagram"></i> <img src="https://pngicon.ru/file/uploads/odnoklassniki.png"
+                                                            class="social-icon" alt="Одноклассники" style="width: 24px; height: 24px;"></a>
+            <a th:href="${blogPost.vkLink}" target="_blank" th:if="${blogPost.vkLink != null}"><i class="fa fa-pinterest"></i> <img src="https://upload.wikimedia.org/wikipedia/commons/2/21/VK.com-logo.svg"
+                                                             class="social-icon" alt="ВКонтакте" style="width: 24px; height: 24px;"></a>
+        </div>
+
+        <div class="footer-subscribe">
+            <p>Подпишитесь на наши обновления и получите 10% скидки!</p>
+            <form id="subscribeForm">
+                <input type="email" id="email" placeholder="Введите email" required>
+                <button type="submit">Подписаться</button>
+            </form>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2024 Перевозка грузов. Все права защищены.</p>
+        <ul>
+            <li><a href="#terms">Условия использования</a></li>
+            <li><a href="#privacy">Политика конфиденциальности</a></li>
+            <li><a href="#refund">Право на возврат</a></li>
+        </ul>
+    </div>
+
+<script>
+    document.getElementById("subscribeForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+        const email = document.getElementById("email").value;
+        if (validateEmail(email)) {
+            alert("Спасибо за подписку!");
+            document.getElementById("subscribeForm").reset();
+        } else {
+            alert("Введите корректный email.");
+        }
+    });
+
+    function validateEmail(email) {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    }
+
+</script>
+
+</footer>
+
+<!-- Раздел "О нас" -->
+<section id="about">
+    <h2>О нас</h2>
+    <p>Мы предоставляем лучшие услуги по перевозке грузов.</p>
+</section>
+
+<!-- Раздел "Услуги" -->
+<section id="services">
+    <h2>Наши услуги</h2>
+    <p>Мы предлагаем транспортировку грузов по всей стране.</p>
+</section>
+
+<!-- Раздел "Частые вопросы" -->
+<section id="faq">
+    <h2>Частые вопросы</h2>
+    <p>Здесь вы найдете ответы на часто задаваемые вопросы.</p>
+</section>
+
+<!-- Раздел "Блог" -->
+<section id="blog">
+    <h2>Блог</h2>
+    <p>Читайте последние новости и статьи в нашем блоге.</p>
+</section>
+
+<!-- Раздел "Условия использования" -->
+<section id="terms">
+    <h2>Условия использования</h2>
+    <p>Здесь указаны правила использования нашего сайта.</p>
+</section>
+
+<!-- Раздел "Политика конфиденциальности" -->
+<section id="privacy">
+    <h2>Политика конфиденциальности</h2>
+    <p>Мы заботимся о вашей конфиденциальности.</p>
+</section>
+
+<!-- Раздел "Право на возврат" -->
+<section id="refund">
+    <h2>Право на возврат</h2>
+    <p>Условия возврата и обмена грузов.</p>
+</section>
+
 
 </body>
 </html>
