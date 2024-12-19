@@ -26,19 +26,16 @@
                 </li>
             </ul>
             <!-- Language dropdown -->
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span th:text="${lang == 'en' ? 'English' : lang == 'ru' ? 'Русский' : lang == 'de' ? 'Deutsch' : 'Italiano'}"></span>
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="languageDropdown">
-                        <li><a class="dropdown-item" th:href="@{/admin_blog(lang='en')}">English</a></li>
-                        <li><a class="dropdown-item" th:href="@{/admin_blog(lang='ru')}">Русский</a></li>
-                        <li><a class="dropdown-item" th:href="@{/admin_blog(lang='de')}">Deutsch</a></li>
-                        <li><a class="dropdown-item" th:href="@{/admin_blog(lang='it')}">Italiano</a></li>
-                    </ul>
-                </li>
-            </ul>
+            <form class="d-flex">
+                <select class="form-select" name="lang" onchange="this.form.submit()">
+                    <option value="en" th:selected="${#locale == 'en'}" th:text="#{chooseLan}">Выберите язык</option>
+                    <option value="en" th:selected="${#locale == 'en'}" th:text="#{english}">English</option>
+                    <option value="ru" th:selected="${#locale == 'ru'}" th:text="#{russian}">Русский</option>
+                    <option value="de" th:selected="${#locale == 'de'}" th:text="#{german}">Deutsch</option>
+                    <option value="it" th:selected="${#locale == 'it'}" th:text="#{italian}">Italiano</option>
+                    <option value="cn" th:selected="${#locale == 'cn'}" th:text="#{chinese}">漢語</option>
+                </select>
+            </form>
         </div>
     </div>
 </nav>

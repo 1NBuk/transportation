@@ -24,12 +24,12 @@
             </ul>
             <form class="d-flex">
                 <select class="form-select" name="lang" onchange="this.form.submit()">
-                    <!-- Использование Thymeleaf для отображения текста из сообщений -->
                     <option value="en" th:selected="${#locale == 'en'}" th:text="#{chooseLan}">Выберите язык</option>
                     <option value="en" th:selected="${#locale == 'en'}" th:text="#{english}">English</option>
                     <option value="ru" th:selected="${#locale == 'ru'}" th:text="#{russian}">Русский</option>
                     <option value="de" th:selected="${#locale == 'de'}" th:text="#{german}">Deutsch</option>
                     <option value="it" th:selected="${#locale == 'it'}" th:text="#{italian}">Italiano</option>
+                    <option value="cn" th:selected="${#locale == 'cn'}" th:text="#{chinese}">漢語</option>
                 </select>
             </form>
         </div>
