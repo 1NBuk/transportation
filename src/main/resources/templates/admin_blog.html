@@ -1,49 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Админ Панель</title>
+    <title th:text="#{adminPanelTitle}">Админ Панель</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="#">Админ Блог</a>
+        <a class="navbar-brand" href="#" th:text="#{adminBlog}">Админ Блог</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link active" href="/admin_blog">Блоги</a>
+                    <a class="nav-link active" href="/admin_blog" th:text="#{blogList}">Блоги</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin_blog/new">Добавить блог</a>
+                    <a class="nav-link" href="/admin_blog/new" th:text="#{addBlog}">Добавить блог</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/index">Домой</a>
+                    <a class="nav-link" href="/index" th:text="#{home}">Домой</a>
+                </li>
+            </ul>
+            <!-- Language dropdown -->
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span th:text="${lang == 'en' ? 'English' : lang == 'ru' ? 'Русский' : lang == 'de' ? 'Deutsch' : 'Italiano'}"></span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+                        <li><a class="dropdown-item" th:href="@{/admin_blog(lang='en')}">English</a></li>
+                        <li><a class="dropdown-item" th:href="@{/admin_blog(lang='ru')}">Русский</a></li>
+                        <li><a class="dropdown-item" th:href="@{/admin_blog(lang='de')}">Deutsch</a></li>
+                        <li><a class="dropdown-item" th:href="@{/admin_blog(lang='it')}">Italiano</a></li>
+                    </ul>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
+
 <form id="searchForm" action="/admin_blog/search" method="get" class="mb-4">
     <div class="row g-2">
         <div class="col-md-4">
-            <input type="text" name="title" class="form-control" placeholder="Поиск по названию">
+            <input type="text" name="title" class="form-control" th:placeholder="#{searchByTitle}" placeholder="Поиск по названию">
         </div>
         <div class="col-md-4">
-            <input type="text" name="content" class="form-control" placeholder="Поиск по содержанию">
+            <input type="text" name="content" class="form-control" th:placeholder="#{searchByContent}" placeholder="Поиск по содержанию">
         </div>
         <div class="col-md-4">
-            <input type="date" name="date" class="form-control" placeholder="Поиск по дате">
+            <input type="date" name="date" class="form-control" th:placeholder="#{searchByDate}" placeholder="Поиск по дате">
         </div>
     </div>
     <div class="row mt-2">
         <div class="col text-center">
-            <button type="submit" class="btn btn-primary">Искать</button>
-            <button type="button" class="btn btn-secondary" onclick="clearForm()">Очистить</button>
+            <button type="submit" class="btn btn-primary" th:text="#{searchButton}">Искать</button>
+            <button type="button" class="btn btn-secondary" onclick="clearForm()" th:text="#{clearButton}">Очистить</button>
         </div>
     </div>
 </form>
@@ -54,14 +69,14 @@
         window.location.href = '/admin_blog'; // Перенаправление на начальную страницу
     }
 </script>
+
 <div class="container mt-4">
-    <h1 class="text-center mb-4">Управление блогами</h1>
+    <h1 class="text-center mb-4" th:text="#{manageBlogs}">Управление блогами</h1>
     <div class="row g-3" th:each="blogPost : ${blogPosts}">
         <div class="col-md-12">
             <div class="card mb-3">
                 <div class="row g-0">
                     <div class="col-md-4">
-                        <!-- Если imageUrl пустое, используем значение по умолчанию -->
                         <img th:src="${blogPost.imageUrl != null ? blogPost.imageUrl : 'https://cdn1.ozone.ru/s3/multimedia-1-z/6980409107.jpg'}"
                              class="img-fluid rounded-start" alt="Изображение блога">
                     </div>
@@ -69,52 +84,34 @@
                         <div class="card-body">
                             <h5 class="card-title" th:text="${blogPost.title}">Название блога</h5>
                             <p class="card-text" id="content-${blogPost.id}" th:text="${blogPost.content}"></p>
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function () {
-                                    document.querySelectorAll('.card-text').forEach(function (element) {
-                                        let words = element.textContent.split(' ');
-                                        if (words.length > 50) {
-                                            element.textContent = words.slice(0, 50).join(' ') + '...';
-                                        }
-                                    });
-                                });
-                            </script>
                             <p class="card-text">
                                 <small class="text-muted" th:text="${#temporals.format(blogPost.createdDate, 'yyyy-MM-dd HH:mm')}">Дата публикации</small>
                             </p>
                             <div class="d-flex justify-content-between align-items-center">
-                                <a th:href="@{/admin_blog/{id}(id=${blogPost.id})}" class="btn btn-primary">Подробнее</a>
+                                <a th:href="@{/admin_blog/{id}(id=${blogPost.id})}" class="btn btn-primary" th:text="#{moreDetails}">Подробнее</a>
 
                                 <div>
-                                    <!-- Ссылка на ВКонтакте -->
                                     <a th:href="${blogPost.vkLink}" target="_blank" th:if="${blogPost.vkLink != null}">
                                         <img src="https://upload.wikimedia.org/wikipedia/commons/2/21/VK.com-logo.svg"
                                              class="social-icon" alt="ВКонтакте" style="width: 24px; height: 24px;">
                                     </a>
-
-                                    <!-- Ссылка на Facebook -->
                                     <a th:href="${blogPost.facebookLink}" target="_blank" th:if="${blogPost.facebookLink != null}">
                                         <img src="https://cdn-icons-png.flaticon.com/512/145/145802.png"
                                              class="social-icon" alt="Facebook" style="width: 24px; height: 24px;">
                                     </a>
-
-                                    <!-- Ссылка на Одноклассники -->
                                     <a th:href="${blogPost.odnkLink}" target="_blank" th:if="${blogPost.odnkLink != null}">
                                         <img src="https://pngicon.ru/file/uploads/odnoklassniki.png"
                                              class="social-icon" alt="Одноклассники" style="width: 24px; height: 24px;">
                                     </a>
-
-                                    <!-- Ссылка на Twitter -->
                                     <a th:href="${blogPost.twitterLink}" target="_blank" th:if="${blogPost.twitterLink != null}">
                                         <img src="https://cdn-icons-png.flaticon.com/512/145/145812.png"
                                              class="social-icon" alt="Twitter" style="width: 24px; height: 24px;">
                                     </a>
                                 </div>
-
                             </div>
                             <div class="mt-3">
-                                <a th:href="@{/admin_blog/edit/{id}(id=${blogPost.id})}" class="btn btn-sm btn-warning">Редактировать</a>
-                                <a th:href="@{/admin_blog/delete/{id}(id=${blogPost.id})}" class="btn btn-sm btn-danger">Удалить</a>
+                                <a th:href="@{/admin_blog/edit/{id}(id=${blogPost.id})}" class="btn btn-sm btn-warning" th:text="#{editButton}">Редактировать</a>
+                                <a th:href="@{/admin_blog/delete/{id}(id=${blogPost.id})}" class="btn btn-sm btn-danger" th:text="#{deleteButton}">Удалить</a>
                             </div>
                         </div>
                     </div>

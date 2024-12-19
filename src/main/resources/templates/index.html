@@ -29,7 +29,7 @@ colspan задает количество ячеек, объединенных �
 <html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Система работы с перевозками грузов</title>
+    <title th:text="#{title}">Система работы с перевозками грузов</title>
     <!-- Это ссылка на файл стилей (CSS) для библиотеки Bootstrap, который загружается через сеть CDN
     (Content Delivery Network). Эта библиотека предоставляет готовые стили для создания адаптивных веб-страниц.-->
     <!--
@@ -75,15 +75,25 @@ colspan задает количество ячеек, объединенных �
      style=" background-image: linear-gradient(rgba(0, 0, 0, 0.527),rgba(0, 0, 0, 0.5)) , url('https://cargomaster.info/wp-content/uploads/2023/04/perevozki-kontejnerami.jpg'); height: 100vh; overflow: auto; background-size: cover">
     <!-- blockquote класс bootstrap; текст по центру -->
     <!-- Заголовок страницы -->
-    <a href="/admin_blog" class="btn btn-primary btn-lg shadow-sm mt-3">Блог админа</a>
-    <a href="/manage_users" class="btn btn-info btn-lg shadow-sm mt-3">Пользователи</a>
-    <a href="/logout" class="btn btn-danger btn-lg shadow-sm mt-3">Выход</a>
-    <blockquote class="blockquote text-center text-white"><h1>Перевозки грузов</h1></blockquote>
+
+    <a class="btn btn-primary btn-lg shadow-sm mt-3" href="/admin_blog" th:text="#{adminBlog}">Блог админа</a>
+    <a href="/manage_users" class="btn btn-info btn-lg shadow-sm mt-3" th:text="#{users}">Пользователи</a>
+    <a href="/logout" class="btn btn-danger btn-lg shadow-sm mt-3" th:text="#{exit}">Выход</a>
+    <form class="d-flex">
+        <select class="form-select" name="lang" onchange="this.form.submit()">
+            <option value="en" th:selected="${#locale == 'en'}" th:text="#{chooseLan}">Выберите язык</option>
+            <option value="en" th:selected="${#locale == 'en'}" th:text="#{english}">English</option>
+            <option value="ru" th:selected="${#locale == 'ru'}" th:text="#{russian}">Русский</option>
+            <option value="de" th:selected="${#locale == 'de'}" th:text="#{german}">Deutsch</option>
+            <option value="it" th:selected="${#locale == 'it'}" th:text="#{italian}">Italiano</option>
+        </select>
+    </form>
+    <blockquote class="blockquote text-center text-white" th:text="#{transportation}"><h1>Перевозки грузов</h1></blockquote>
     <!-- класс колонки, внутри которой будем работать, чтобы сделать форму поиска по центру-->
     <!-- Форма поиска -->
     <div class="row">
         <div class="col-md-8 offset-md-4">
-            <h4 class="text-white">Поиск груза по любому критерию:</h4>
+            <h4 class="text-white" th:text="#{searchByAnyCriteria}">Поиск груза по любому критерию:</h4>
             <!--Это HTML-форма с использованием шаблонизатора Thymeleaf (атрибут th:).
             Атрибут th:action указывает на действие формы, которое будет выполняться при отправке.
             Здесь это корневая страница (/).-->
@@ -120,7 +130,7 @@ colspan задает количество ячеек, объединенных �
     <div class="row mt-4">
         <div class="col-md-6 offset-md-4">
             <!-- Заголовок для блока фильтрации по дате -->
-            <h4 class="text-white">Фильтр по дате поставки груза:</h4>
+            <h4 class="text-white" th:text="#{filter}">Фильтр по дате поставки груза:</h4>
 
             <!-- Форма для фильтрации грузов по дате, идентификатор можно использовать для обращения к форме -->
             <form id="dateFilterForm">
@@ -128,16 +138,16 @@ colspan задает количество ячеек, объединенных �
                 <div class="input-group">
 
                     <!-- Поле для выбора начальной даты фильтрации -->
-                    <input type="date" id="startDate" class="form-control" placeholder="Начальная дата">
+                    <input type="date" id="startDate" class="form-control" placeholder="#{startDate}">
 
                     <!-- Текстовое обозначение промежутка между датами -->
-                    <span class="input-group-text">до</span>
+                    <span class="input-group-text" placeholder="#{till}">до</span>
 
                     <!-- Поле для выбора конечной даты фильтрации -->
-                    <input type="date" id="endDate" class="form-control" placeholder="Конечная дата">
+                    <input type="date" id="endDate" class="form-control" placeholder="#{endDate}">
 
                     <!-- Кнопка для применения фильтра, при клике вызывается JavaScript-функция filterGoodsByDate -->
-                    <button type="button" class="btn btn-primary" onclick="filterGoodsByDate()">Применить</button>
+                    <button type="button" class="btn btn-primary" onclick="filterGoodsByDate()" th:text="#{apply}">Применить</button>
 
                 </div> <!-- Закрываем блок input-group -->
             </form> <!-- Закрываем форму -->
@@ -148,13 +158,13 @@ colspan задает количество ячеек, объединенных �
     <div class="row mt-4 text-white"><!--mt-4 добавляет отступ сверху-->
         <div class="col-md-6 offset-md-4"> <!--будет занимать 6 колонок сетки на экранах средней ширины и больше,
         с отступом в 4 колонки слева, выравнивая содержимое по центру-->
-            <h4 class="text-white">Показать количество отправки грузов за выбранную дату:</h4>
+            <h4 class="text-white" th:text="#{showOnDate}">Показать количество отправки грузов за выбранную дату:</h4>
             <!-- Размещение в одной строке -->
             <div class="input-group"> <!--чтобы располагались на одной строке-->
                 <!-- Поле для выбора даты -->
                 <input type="date" id="selectedDate" class="form-control"><!--form-control добавляет стандартное оформление-->
                 <!-- Кнопка для показа количества сдач -->
-                <button class="btn btn-primary" onclick="displayIssueCount()">Показать</button>
+                <button class="btn btn-primary" onclick="displayIssueCount()" th:text="#{show}">Показать</button>
                 <!--делает её кнопкой Bootstrap с синим цветом-->
             </div>
             <!-- Блок для отображения результата -->
@@ -168,13 +178,13 @@ colspan задает количество ячеек, объединенных �
         <tr>
             <!-- scope="col"
             данная ячейка (обычно th) отвечает за заголовок колонки в таблице. -->
-            <th scope="col">ID груза</th>
-            <th scope="col">Название груза</th>
-            <th scope="col">Содержимое груза</th>
-            <th scope="col">Город отправки</th>
-            <th scope="col">Дата отправки</th>
-            <th scope="col">Город прибытия</th>
-            <th scope="col">Дата прибытия</th>
+            <th scope="col" th:text="#{cargoId}">ID груза</th>
+            <th scope="col" th:text="#{cargoName}">Название груза</th>
+            <th scope="col" th:text="#{cargoContent}">Содержимое груза</th>
+            <th scope="col" th:text="#{departureCity}">Город отправки</th>
+            <th scope="col" th:text="#{departureDate}">Дата отправки</th>
+            <th scope="col" th:text="#{arrivalCity}">Город прибытия</th>
+            <th scope="col" th:text="#{arrivalDate}">Дата прибытия</th>
         </tr>
         </thead>
         <!-- тело таблицы -->
@@ -183,13 +193,14 @@ colspan задает количество ячеек, объединенных �
         <tr th:each="good: ${listGoods}">
             <!-- row - чтобы id выделялся жирным цветом -->
             <!-- через эту сущность будем обращаться ко всем элементам listStudents; если данных нет, то будет выводиться id студента отстутствует-->
-            <th scope="row" class="text-white" th:text="${good.id}">ID груза отсутствует</th>
-            <th scope="row" class="text-white" th:text="${good.good_name}">Название груза отсутствует</th>
-            <th scope="row" class="text-white" th:text="${good.content}">Содержимое груза отсутствует</th>
-            <th scope="row" class="text-white" th:text="${good.departure_city}">Город отправки отсутствует</th>
-            <th scope="row" class="text-white" th:text="${good.departure_date}">Дата отправки отсутствует</th>
-            <th scope="row" class="text-white" th:text="${good.arrival_city}">Город прибытия отсутствует</th>
-            <th scope="row" class="text-white" th:text="${good.arrival_date}">Дата прибытия отсутствует</th>
+            <th scope="row" class="text-white" th:text="${good.id}">#{goodIdNotFound}</th>
+            <th scope="row" class="text-white" th:text="${good.good_name}">#{goodNameNotFound}</th>
+            <th scope="row" class="text-white" th:text="${good.content}">#{cargoContentNotFound}</th>
+            <th scope="row" class="text-white" th:text="${good.departure_city}">#{departureCityNotFound}</th>
+            <th scope="row" class="text-white" th:text="${good.departure_date}">#{departureDateNotFound}</th>
+            <th scope="row" class="text-white" th:text="${good.arrival_city}">#{arrivalCityNotFound}</th>
+            <th scope="row" class="text-white" th:text="${good.arrival_date}">#{arrivalDateNotFound}</th>
+
             <!-- добавляем кнопки -->
             <!-- ссылка на редактирование в AppController -->
             <!--
@@ -205,24 +216,25 @@ colspan задает количество ячеек, объединенных �
                 (путь формируется с использованием ID груза ${good.id}).
                 Кнопка с классом btn btn-info — синяя кнопка Bootstrap.
                 -->
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editGood">Редактировать</button>
-                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Удалить</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editGood" th:text="#{edit}">Редактировать</button>
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" th:text="#{deleteButton}">Удалить</button>
                 <!-- Модальное окно для удаления-->
                 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="deleteModalLabel">Удалить?</h5>
+                                <h5 class="modal-title" id="deleteModalLabel" th:text="#{deleteModalTitle}"></h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <div class="modal-body">
-                                Вы уверены, что хотите удалить этот товар?
+                            <div class="modal-body" th:text="#{deleteConfirmationMessage}">
                             </div>
                             <div class="modal-footer">
-                                <a th:href="@{'/delete/' + ${good.id}}"><button type="button" class="btn btn-danger">Удалить</button></a>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                                <a th:href="@{'/delete/' + ${good.id}}">
+                                    <button type="button" class="btn btn-danger" th:text="#{deleteButton}"></button>
+                                </a>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancelButton}"></button>
                             </div>
                         </div>
                     </div>
@@ -234,83 +246,73 @@ colspan задает количество ячеек, объединенных �
     </table>
 
     <!-- Модальное окно для изменения записи -->
-    <div class="modal fade" id="editGood" tabindex="-1" role="dialog" aria-labelledby="editGoodLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editGoodLabel">Редактировать</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form th:action="@{/save}" th:object="${good}" method="post">
-                        <table>
-                            <tr>
-                                <!-- указываем перемнные напрямую, поэтому *; говорим, что id неизменяемый=> readonly-->
-                                <!--g-все совпадения в строке
-                                шаблон ищет любой символ, который не является цифрой
-                                '' — замена
-                                -->
-                                <td>ID груза:</td>
-                                <td><input type="text"
-                                           onkeyup="this.value = this.value.replace(/[^0-9]/g, '');"
-                                           onchange="this.value = this.value.replace(/[^0-9]/g, '');"
-                                           maxlength="10"
-                                           th:field="*{id}"
-                                           required></td>
-                            </tr>
-                            <tr>
-                                <td>Название груза:</td>
-                                <td><input type="text" th:field="*{good_name}" required></td>
-                            </tr>
-                            <tr>
-                                <td>Содержимое:</td>
-                                <td><input type="text" th:field="*{content}" required></td>
-                            </tr>
-                            <tr>
-                                <td>Город отпрвки:</td>
-                                <td><input type="text" th:field="*{departure_city}" required></td>
-                            </tr>
-                            <tr>
-                                <td>Дата отправки:</td>
-                                <td>
-                                    <input type="text"
-                                           onkeyup="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1'); this.value = this.value.replace(/^(\d{2})(\d)/g, '$1.$2'); this.value = this.value.replace(/^(\d{2}\.\d{2})(\d)/g, '$1.$2');"
-                                           onchange="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1'); this.value = this.value.replace(/^(\d{2})(\d)/g, '$1.$2'); this.value = this.value.replace(/^(\d{2}\.\d{2})(\d)/g, '$1.$2');"
-                                           maxlength="10"
-                                           th:field="*{departure_date}"
-                                           required>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Город прибытия:</td>
-                                <td><input type="text" th:field="*{arrival_city}" required></td>
-                            </tr>
-                            <tr>
-                                <td>Дата прибытия:</td>
-                                <td>
-                                    <input type="text"
-                                           onkeyup="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1'); this.value = this.value.replace(/^(\d{2})(\d)/g, '$1.$2'); this.value = this.value.replace(/^(\d{2}\.\d{2})(\d)/g, '$1.$2');"
-                                           onchange="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1'); this.value = this.value.replace(/^(\d{2})(\d)/g, '$1.$2'); this.value = this.value.replace(/^(\d{2}\.\d{2})(\d)/g, '$1.$2');"
-                                           maxlength="10"
-                                           th:field="*{arrival_date}"
-                                           required>
-                                </td>
-                            </tr>
-                            <!-- кнопка -->
-                            <tr>
-                                <!-- Ячейка таблицы, которая занимает две колонки (атрибут colspan="2"). -->
-                                <td colspan="2">
-                                    <button type="submit" class="btn btn-primary" data-togge="button" aria-pressed="false" th:autocomplete="off">Отправить</button>
-                                </td>
-                            </tr>
-                        </table>
-                    </form>
+        <div class="modal fade" id="editGood" tabindex="-1" role="dialog" aria-labelledby="editGoodLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editGoodLabel" th:text="#{editGoodModalTitle}"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form th:action="@{/save}" th:object="${good}" method="post">
+                            <table>
+                                <tr>
+                                    <td th:text="#{goodId}"></td>
+                                    <td><input type="text"
+                                               onkeyup="this.value = this.value.replace(/[^0-9]/g, '');"
+                                               onchange="this.value = this.value.replace(/[^0-9]/g, '');"
+                                               maxlength="10"
+                                               th:field="*{id}" required></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="#{goodName}"></td>
+                                    <td><input type="text" th:field="*{good_name}" required></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="#{content}"></td>
+                                    <td><input type="text" th:field="*{content}" required></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="#{departureCity}"></td>
+                                    <td><input type="text" th:field="*{departure_city}" required></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="#{departureDate}"></td>
+                                    <td>
+                                        <input type="text"
+                                               onkeyup="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1'); this.value = this.value.replace(/^(\d{2})(\d)/g, '$1.$2'); this.value = this.value.replace(/^(\d{2}\.\d{2})(\d)/g, '$1.$2');"
+                                               onchange="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1'); this.value = this.value.replace(/^(\d{2})(\d)/g, '$1.$2'); this.value = this.value.replace(/^(\d{2}\.\d{2})(\d)/g, '$1.$2');"
+                                               maxlength="10"
+                                               th:field="*{departure_date}" required>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td th:text="#{arrivalCity}"></td>
+                                    <td><input type="text" th:field="*{arrival_city}" required></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="#{arrivalDate}"></td>
+                                    <td>
+                                        <input type="text"
+                                               onkeyup="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1'); this.value = this.value.replace(/^(\d{2})(\d)/g, '$1.$2'); this.value = this.value.replace(/^(\d{2}\.\d{2})(\d)/g, '$1.$2');"
+                                               onchange="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1'); this.value = this.value.replace(/^(\d{2})(\d)/g, '$1.$2'); this.value = this.value.replace(/^(\d{2}\.\d{2})(\d)/g, '$1.$2');"
+                                               maxlength="10"
+                                               th:field="*{arrival_date}" required>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <button type="submit" class="btn btn-primary" data-togge="button" aria-pressed="false" th:autocomplete="off">#{save}</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
     <!-- с помощью javascript считаем кол-во студентов-->
     <!-- Счётчик количества грузов -->
@@ -412,11 +414,11 @@ colspan задает количество ячеек, объединенных �
 
     <!-- Контейнер для гистограммы -->
     <div class="container my-5">
-        <h3 class="text-center text-white">Гистограмма количества грузов по дням отправки</h3>
+        <h3 class="text-center text-white" th:text="#{hist}">Гистограмма количества грузов по дням отправки</h3>
         <canvas id="issueChart"></canvas>
     </div>
     <blockquote class="blockquote text-center">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addBarbishModal">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addBarbishModal" th:text="#{addRecordModalTitle}">
             Добавить запись
         </button>
     </blockquote>
@@ -427,7 +429,7 @@ colspan задает количество ячеек, объединенных �
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addBarbishModalLabel">Добавить запись</h5>
+                    <h5 class="modal-title" id="addBarbishModalLabel" th:text="#{addRecordModalTitle}">Добавить запись</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -435,9 +437,9 @@ colspan задает количество ячеек, объединенных �
                 <div class="modal-body">
                     <form th:action="@{/save}" th:object="${good}" method="post">
                         <table>
-                            <!-- указываем перемнные напрямую, поэтому *-->
+                            <!-- ID груза -->
                             <tr>
-                                <td>ID груза:</td>
+                                <td th:text="#{cargoId}">ID груза:</td>
                                 <td><input type="text"
                                            onkeyup="this.value = this.value.replace(/[^0-9]/g, '');"
                                            onchange="this.value = this.value.replace(/[^0-9]/g, '');"
@@ -445,47 +447,41 @@ colspan задает количество ячеек, объединенных �
                                            th:field="*{id}"
                                            required></td>
                             </tr>
+                            <!-- Название груза -->
                             <tr>
-                                <td>Название груза:</td>
+                                <td th:text="#{cargoName}">Название груза:</td>
                                 <td><input type="text" th:field="*{good_name}" required></td>
                             </tr>
+                            <!-- Содержимое -->
                             <tr>
-                                <td>Содержимое:</td>
+                                <td th:text="#{cargoContent}">Содержимое:</td>
                                 <td><input type="text" th:field="*{content}" required></td>
                             </tr>
+                            <!-- Город отправки -->
                             <tr>
-                                <td>Город отпрвки:</td>
+                                <td th:text="#{departureCity}">Город отправки:</td>
                                 <td><input type="text" th:field="*{departure_city}" required></td>
                             </tr>
-                            <td>Дата отправки:</td>
-                            <!--
-                            onkeyup: Срабатывает каждый раз, когда пользователь отпускает клавишу после нажатия в текстовом поле.
-                            Это позволяет динамически обрабатывать вводимые данные в реальном времени.
-                            onchange: Срабатывает, когда значение в поле изменилось и фокус с поля потерян (например, при нажатии на другую область страницы).
-                            Это позволяет выполнять проверку или обработку данных после завершения ввода.
-                            -->
-                            <td>
-                                <!--
-                                [^0-9.] — удаляет все символы, кроме цифр и точек.
-                                 (\..*)\. — предотвращает ввод более одной точки подряд.
-                                 ^(\d{2})(\d) — после ввода двух цифр, автоматически добавляет точку.
-                                 ^(\d{2}\.\d{2})(\d) — после ввода ещё двух цифр (месяца), автоматически добавляет ещё одну точку.
-                                 maxlength="10" — ограничивает ввод до 10 символов (например, 12.05.2023).
-                                 -->
-                                <input type="text"
-                                       onkeyup="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1'); this.value = this.value.replace(/^(\d{2})(\d)/g, '$1.$2'); this.value = this.value.replace(/^(\d{2}\.\d{2})(\d)/g, '$1.$2');"
-                                       onchange="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1'); this.value = this.value.replace(/^(\d{2})(\d)/g, '$1.$2'); this.value = this.value.replace(/^(\d{2}\.\d{2})(\d)/g, '$1.$2');"
-                                       maxlength="10"
-                                       th:field="*{departure_date}"
-                                       required>
-                            </td>
-                            </tr>
+                            <!-- Дата отправки -->
                             <tr>
-                                <td>Город прибытия:</td>
+                                <td th:text="#{departureDate}">Дата отправки:</td>
+                                <td>
+                                    <input type="text"
+                                           onkeyup="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1'); this.value = this.value.replace(/^(\d{2})(\d)/g, '$1.$2'); this.value = this.value.replace(/^(\d{2}\.\d{2})(\d)/g, '$1.$2');"
+                                           onchange="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1'); this.value = this.value.replace(/^(\d{2})(\d)/g, '$1.$2'); this.value = this.value.replace(/^(\d{2}\.\d{2})(\d)/g, '$1.$2');"
+                                           maxlength="10"
+                                           th:field="*{departure_date}"
+                                           required>
+                                </td>
+                            </tr>
+                            <!-- Город прибытия -->
+                            <tr>
+                                <td th:text="#{arrivalCity}">Город прибытия:</td>
                                 <td><input type="text" th:field="*{arrival_city}" required></td>
                             </tr>
+                            <!-- Дата прибытия -->
                             <tr>
-                                <td>Дата прибытия:</td>
+                                <td th:text="#{arrivalDate}">Дата прибытия:</td>
                                 <td>
                                     <input type="text"
                                            onkeyup="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1'); this.value = this.value.replace(/^(\d{2})(\d)/g, '$1.$2'); this.value = this.value.replace(/^(\d{2}\.\d{2})(\d)/g, '$1.$2');"
@@ -495,14 +491,10 @@ colspan задает количество ячеек, объединенных �
                                            required>
                                 </td>
                             </tr>
+                            <!-- Кнопка Сохранить -->
                             <tr>
                                 <td>
-                                    <!--
-                                data-toggle="button" — используется для изменения поведения кнопки (включения/выключения).
-                                aria-pressed="false" — атрибут для обеспечения доступности, указывает, что кнопка не нажата.
-                                autocomplete="off" — отключает автозаполнение полей формы.
-                                    -->
-                                    <button type="submit" class="btn btn-primary" data-togge="button" aria-pressed="false" autocomplete="off">Сохранить</button>
+                                    <button type="submit" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off" th:text="#{save}">Сохранить</button>
                                 </td>
                             </tr>
                         </table>
@@ -511,6 +503,7 @@ colspan задает количество ячеек, объединенных �
             </div>
         </div>
     </div>
+
 
     <!-- Подключение Bootstrap скриптов -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>

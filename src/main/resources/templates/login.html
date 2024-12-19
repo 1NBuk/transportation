@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
->
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Система регистрации и входа</title>
+    <title th:text="#{registrationSystem}">Система регистрации и входа</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
@@ -14,66 +13,74 @@
 <body style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://cargomaster.info/wp-content/uploads/2023/04/perevozki-kontejnerami.jpg'); background-size: cover; background-position: center; height: 100vh; overflow: auto;">
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" th:href="@{/index}">Система регистрации и входа</a>
+        <a class="navbar-brand" th:href="@{/index}" th:text="#{registrationSystem}">Система регистрации и входа</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" th:href="@{/register}">Зарегистрироваться</a>
+                    <a class="nav-link active" aria-current="page" th:href="@{/register}" th:text="#{register}">Зарегистрироваться</a>
                 </li>
             </ul>
+            <form class="d-flex">
+                <select class="form-select" name="lang" onchange="this.form.submit()">
+                    <option value="en" th:selected="${#locale == 'en'}" th:text="#{chooseLan}">Выберите язык</option>
+                    <option value="en" th:selected="${#locale == 'en'}" th:text="#{english}">English</option>
+                    <option value="ru" th:selected="${#locale == 'ru'}" th:text="#{russian}">Русский</option>
+                    <option value="de" th:selected="${#locale == 'de'}" th:text="#{german}">Deutsch</option>
+                    <option value="it" th:selected="${#locale == 'it'}" th:text="#{italian}">Italiano</option>
+                </select>
+            </form>
         </div>
     </div>
 </nav>
-<br /><br />
+<br/><br/>
 <div class="container">
     <div class="row">
         <div class="col-md-6 offset-md-3">
 
             <div th:if="${param.error}">
-                <div class="alert alert-danger">Неправильный Email или пароль</div>
+                <div class="alert alert-danger" th:text="#{login.error}">Неправильный Email или пароль</div>
             </div>
             <div th:if="${param.logout}">
-                <div class="alert alert-success"> Вы вышли</div>
+                <div class="alert alert-success" th:text="#{logout.success}">Вы вышли</div>
             </div>
 
             <div class="card">
                 <div class="card-header">
-                    <h2 class="text-center">Форма для входа</h2>
+                    <h2 class="text-center" th:text="#{login.form}">Форма для входа</h2>
                 </div>
                 <div class="card-body">
                     <form
                             method="post"
                             role="form"
                             th:action="@{/login}"
-                            class="form-horizontal"
-                    >
+                            class="form-horizontal">
                         <div class="form-group mb-3">
-                            <label class="control-label"> Email</label>
+                            <label class="control-label" th:text="#{email}">Email</label>
                             <input
                                     type="text"
                                     id="username"
                                     name="username"
                                     class="form-control"
-                                    placeholder="Введите email адрес"
-                            />
+                                    th:placeholder="#{email.placeholder}" />
                         </div>
 
                         <div class="form-group mb-3">
-                            <label class="control-label"> Пароль</label>
+                            <label class="control-label" th:text="#{password}">Пароль</label>
                             <input
                                     type="password"
                                     id="password"
                                     name="password"
                                     class="form-control"
-                                    placeholder="Введите пароль"
-                            />
+                                    th:placeholder="#{password.placeholder}" />
                         </div>
                         <div class="form-group mb-3">
-                            <button class="btn btn-primary" type="submit">Войти</button>
-                            <span class="text-primary">Еще не зарегистрированы? <a data-bs-toggle="modal" data-bs-target="#registerModal">Зарегистрируйтесь здесь</a></span>
+                            <button class="btn btn-primary" type="submit" th:text="#{login}">Войти</button>
+                            <span class="text-primary">
+                                <a data-bs-toggle="modal" data-bs-target="#registerModal" th:text="#{register.here}">Зарегистрируйтесь здесь</a>
+                            </span>
                         </div>
                     </form>
                 </div>
@@ -86,47 +93,45 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="registerModalLabel">Регистрация</h5>
+                    <h5 class="modal-title" id="registerModalLabel" th:text="#{register}">Регистрация</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form method="post" th:action="@{/register/save}" th:object="${user}">
                         <div class="form-group mb-3">
-                            <label class="form-label">Имя</label>
-                            <input class="form-control" id="firstName" name="firstName" placeholder="Введите имя" th:field="*{firstName}" type="text"/>
+                            <label class="form-label" th:text="#{firstName}">Имя</label>
+                            <input class="form-control" id="firstName" name="firstName" th:field="*{firstName}" th:placeholder="#{firstName.placeholder}" type="text" />
                             <p th:errors="*{firstName}" class="text-danger"></p>
                         </div>
 
                         <div class="form-group mb-3">
-                            <label class="form-label">Фамилия</label>
-                            <input class="form-control" id="lastName" name="lastName" placeholder="Введите фамилию" th:field="*{lastName}" type="text"/>
+                            <label class="form-label" th:text="#{lastName}">Фамилия</label>
+                            <input class="form-control" id="lastName" name="lastName" th:field="*{lastName}" th:placeholder="#{lastName.placeholder}" type="text" />
                             <p th:errors="*{lastName}" class="text-danger"></p>
                         </div>
 
                         <div class="form-group mb-3">
-                            <label class="form-label">Email</label>
-                            <input class="form-control" id="email" name="email" placeholder="Введите email адрес" th:field="*{email}" type="email"/>
+                            <label class="form-label" th:text="#{email}">Email</label>
+                            <input class="form-control" id="email" name="email" th:field="*{email}" th:placeholder="#{email.placeholder}" type="email" />
                             <p th:errors="*{email}" class="text-danger"></p>
                         </div>
 
                         <div class="form-group mb-3">
-                            <label class="form-label">Пароль</label>
-                            <input class="form-control" id="password1" name="password1" placeholder="Введите пароль" th:field="*{password}" type="password"/>
+                            <label class="form-label" th:text="#{password}">Пароль</label>
+                            <input class="form-control" id="password1" name="password1" th:field="*{password}" th:placeholder="#{password.placeholder}" type="password" />
                             <p th:errors="*{password}" class="text-danger"></p>
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="adminPassword">Если вы админ, то напишите пароль</label>
-                            <input type="password" id="adminPassword" name="adminPassword" class="form-control" placeholder="Введите Admin пароль"/>
+                            <label for="adminPassword" th:text="#{adminPassword}">Если вы админ, то напишите пароль</label>
+                            <input type="password" id="adminPassword" name="adminPassword" class="form-control" th:placeholder="#{adminPassword.placeholder}" />
                         </div>
                         <div class="form-group">
-                            <button class="btn btn-primary" type="submit">Зарегистрироваться</button>
-                            <span class="text-primary">Уже зарегистрированы? <a data-bs-toggle="modal" data-bs-target="#registerModal">Войти здесь</a></span>
+                            <button class="btn btn-primary" type="submit" th:text="#{register}">Зарегистрироваться</button>
+                            <span class="text-primary">
+                                <a data-bs-toggle="modal" data-bs-target="#registerModal" th:text="#{login.here}">Войти здесь</a>
+                            </span>
                         </div>
-
-
-
-                        </span>
                     </form>
                 </div>
             </div>
@@ -135,7 +140,5 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
 </body>
 </html>
