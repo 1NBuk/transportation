@@ -281,16 +281,16 @@
 
     <div class="footer-container">
         <div class="footer-logo">
-            <h1>Перевозка грузов</h1>
-            <p>info@cargo-system.com</p>
-            <p>+7 800 555 35 35</p>
+            <h1 th:text="#{footer.logo.title}">Перевозка грузов</h1>
+            <p th:text="#{footer.logo.email}">info@cargo-system.com</p>
+            <p th:text="#{footer.logo.phone}">+7 800 555 35 35</p>
         </div>
 
         <div class="footer-links">
             <ul>
-                <li><a href="/about" target="_blank">О нас</a></li>
-                <li><a href="/services" target="_blank">Услуги</a></li>
-                <li><a href="/faq" target="_blank">Частые вопросы</a></li>
+                <li><a href="/about" target="_blank" th:text="#{footer.links.about}">О нас</a></li>
+                <li><a href="/services" target="_blank" th:text="#{footer.links.services}">Услуги</a></li>
+                <li><a href="/faq" target="_blank" th:text="#{footer.links.faq}">Частые вопросы</a></li>
             </ul>
         </div>
 
@@ -310,19 +310,19 @@
         </div>
 
         <div class="footer-subscribe">
-            <p>Подпишитесь на наши обновления и получите 10% скидки!</p>
+            <p th:text="#{footer.subscribe.text}">Подпишитесь на наши обновления и получите 10% скидки!</p>
             <form id="subscribeForm">
-                <input type="email" id="email" placeholder="Введите email" required>
-                <button type="submit">Подписаться</button>
+                <input type="email" id="email" th:placeholder="#{footer.subscribe.placeholder}" required>
+                <button type="submit" th:text="#{footer.subscribe.button}">Подписаться</button>
             </form>
         </div>
     </div>
     <div class="footer-bottom">
-        <p>© 2024 Перевозка грузов. Все права защищены.</p>
+        <p th:text="#{footer.bottom.text}">© 2024 Перевозка грузов. Все права защищены.</p>
         <ul>
-            <li><a href="/terms" target="_blank">Условия использования</a></li>
-            <li><a href="/privacy" target="_blank">Политика конфиденциальности</a></li>
-            <li><a href="/return-policy" target="_blank">Право на возврат</a></li>
+            <li><a href="/terms" target="_blank" th:text="#{footer.bottom.terms}">Условия использования</a></li>
+            <li><a href="/privacy" target="_blank" th:text="#{footer.bottom.privacy}">Политика конфиденциальности</a></li>
+            <li><a href="/return-policy" target="_blank" th:text="#{footer.bottom.return}">Право на возврат</a></li>
         </ul>
     </div>
 
