@@ -4,78 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="#{addBlogTitle}">Добавить Блог</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/styles.css}">
+
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
+<nav class="navbar">
+    <div>
         <a class="navbar-brand" th:text="#{adminBlog}">Админ Блог</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/admin_blog(lang=${lang})}" th:text="#{blogList}">Список блогов</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" th:href="@{/admin_blog/new(lang=${lang})}" th:text="#{addBlog}">Добавить блог</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/index(lang=${lang})}" th:text="#{home}">Домой</a>
-                </li>
-            </ul>
-            <!-- Dropdown for language selection -->
-            <form class="d-flex">
-                <select class="form-select" name="lang" onchange="this.form.submit()">
-                    <option value="en" th:selected="${#locale == 'en'}" th:text="#{chooseLan}">Выберите язык</option>
-                    <option value="en" th:selected="${#locale == 'en'}" th:text="#{english}">English</option>
-                    <option value="ru" th:selected="${#locale == 'ru'}" th:text="#{russian}">Русский</option>
-                    <option value="de" th:selected="${#locale == 'de'}" th:text="#{german}">Deutsch</option>
-                    <option value="it" th:selected="${#locale == 'it'}" th:text="#{italian}">Italiano</option>
-                    <option value="cn" th:selected="${#locale == 'cn'}" th:text="#{chinese}">漢語</option>
-                </select>
-            </form>
-        </div>
     </div>
+    <div>
+        <a th:href="@{/admin_blog(lang=${lang})}" th:text="#{blogList}">Список блогов</a>
+        <a th:href="@{/admin_blog/new(lang=${lang})}" th:text="#{addBlog}" style="font-weight: bold;">Добавить блог</a>
+        <a th:href="@{/index(lang=${lang})}" th:text="#{home}">Домой</a>
+    </div>
+    <form>
+        <select class="form-select" name="lang" onchange="this.form.submit()">
+            <option value="en" th:selected="${#locale == 'en'}" th:text="#{chooseLan}">Выберите язык</option>
+            <option value="en" th:selected="${#locale == 'en'}" th:text="#{english}">English</option>
+            <option value="ru" th:selected="${#locale == 'ru'}" th:text="#{russian}">Русский</option>
+            <option value="de" th:selected="${#locale == 'de'}" th:text="#{german}">Deutsch</option>
+            <option value="it" th:selected="${#locale == 'it'}" th:text="#{italian}">Italiano</option>
+            <option value="cn" th:selected="${#locale == 'cn'}" th:text="#{chinese}">漢語</option>
+        </select>
+    </form>
 </nav>
 
-<div class="container mt-4">
-    <h1 class="mb-4" th:text="#{addNewBlog}">Добавить новый блог</h1>
+<div class="container">
+    <h1 th:text="#{addNewBlog}">Добавить новый блог</h1>
     <form th:action="@{/admin_blog/new}" method="post">
-        <div class="mb-3">
+        <div>
             <label for="title" class="form-label" th:text="#{titleLabel}">Название</label>
-            <input type="text" class="form-control" id="title" name="title" th:placeholder="#{titlePlaceholder}" required>
+            <input type="text" id="title" name="title" th:placeholder="#{titlePlaceholder}" required>
         </div>
-        <div class="mb-3">
+        <div>
             <label for="content" class="form-label" th:text="#{contentLabel}">Текст</label>
-            <textarea class="form-control" id="content" name="content" rows="5" th:placeholder="#{contentPlaceholder}" required></textarea>
+            <textarea id="content" name="content" rows="5" th:placeholder="#{contentPlaceholder}" required></textarea>
         </div>
-        <div class="mb-3">
+        <div>
             <label for="image_url" class="form-label" th:text="#{imageLabel}">Изображение (URL)</label>
-            <textarea class="form-control" id="image_url" name="imageUrl" rows="1" th:placeholder="#{imagePlaceholder}" required></textarea>
+            <textarea id="image_url" name="imageUrl" rows="1" th:placeholder="#{imagePlaceholder}" required></textarea>
         </div>
-        <div class="mb-3">
+        <div>
             <label for="vk_link" class="form-label" th:text="#{vkLabel}">Ссылка на ВКонтакте</label>
-            <input type="url" class="form-control" id="vk_link" name="vkLink" th:placeholder="#{vkPlaceholder}">
+            <input type="url" id="vk_link" name="vkLink" th:placeholder="#{vkPlaceholder}">
         </div>
-        <div class="mb-3">
+        <div>
             <label for="facebook_link" class="form-label" th:text="#{facebookLabel}">Ссылка на Facebook</label>
-            <input type="url" class="form-control" id="facebook_link" name="facebookLink" th:placeholder="#{facebookPlaceholder}">
+            <input type="url" id="facebook_link" name="facebookLink" th:placeholder="#{facebookPlaceholder}">
         </div>
-        <div class="mb-3">
+        <div>
             <label for="odnk_link" class="form-label" th:text="#{odnkLabel}">Ссылка на Одноклассники</label>
-            <input type="url" class="form-control" id="odnk_link" name="odnkLink" th:placeholder="#{odnkPlaceholder}">
+            <input type="url" id="odnk_link" name="odnkLink" th:placeholder="#{odnkPlaceholder}">
         </div>
-        <div class="mb-3">
+        <div>
             <label for="twitter_link" class="form-label" th:text="#{twitterLabel}">Ссылка на Twitter</label>
-            <input type="url" class="form-control" id="twitter_link" name="twitterLink" th:placeholder="#{twitterPlaceholder}">
+            <input type="url" id="twitter_link" name="twitterLink" th:placeholder="#{twitterPlaceholder}">
         </div>
-        <button type="submit" class="btn btn-primary" th:text="#{submitButton}">Добавить</button>
+        <button type="submit" th:text="#{submitButton}">Добавить</button>
     </form>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
