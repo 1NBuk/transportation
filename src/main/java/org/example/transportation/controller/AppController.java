@@ -132,4 +132,28 @@ public class AppController { // Создаем класс с модификат�
         service.delete(id);
         return "redirect:/index";
     }
+    @GetMapping("/about")
+    public String aboutPage() {
+        return "about"; // Имя файла шаблона (например, about.html в папке templates)
+    }
+    @GetMapping("/services")
+    public String servicesPage() {
+        return "services";
+    }
+    @GetMapping("/faq")
+    public String faqPage() {
+        return "faq";
+    }
+    @GetMapping("/terms")
+    public String termsPage() {
+        return "terms"; // Имя файла шаблона (например, about.html в папке templates)
+    }
+    @GetMapping("/privacy")
+    public String privacyPage() {
+        return "privacy"; // Имя файла шаблона (например, about.html в папке templates)
+    }
+    @GetMapping("/return-policy")
+    public String policyPage() {
+        return "return-policy"; // Имя файла шаблона (например, about.html в папке templates)
+    }
 }
