@@ -369,3 +369,122 @@ img {
 .btn-secondary:hover {
     background-color: #5a6268;
 }
+
+nav .navbar-toggler {
+    background-color: white;
+    border: none;
+    cursor: pointer;
+}
+
+nav .navbar-toggler-icon {
+    width: 30px;
+    height: 2px;
+    background-color: black;
+    display: block;
+    margin: 6px auto;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    margin: 0 0.5em;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+nav form {
+    display: flex;
+    align-items: center;
+}
+
+nav select {
+    padding: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.container {
+    max-width: 800px;
+    margin: 2em auto;
+    background-color: white;
+    padding: 1em;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 1em;
+    color: #343a40;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1em;
+}
+
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 0.5em;
+    text-align: left;
+}
+
+table th {
+    background-color: #343a40;
+    color: white;
+}
+
+table tbody tr:nth-child(odd) {
+    background-color: #f2f2f2;
+}
+
+.form-select {
+    padding: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.btn {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    padding: 0.5em 1em;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+nav {
+    background-color: #343a40;
+    color: white;
+    padding: 0.5em 1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav .navbar-brand {
+    color: white;
+    text-decoration: none;
+    font-size: 1.25em;
+}
